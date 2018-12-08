@@ -1,5 +1,6 @@
 package com.tstd2.rpc.spring.parse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -28,17 +29,14 @@ public class ProtocolBeanDefinitionParse implements BeanDefinitionParser {
         String host = element.getAttribute("host");
         String contextpath = element.getAttribute("contextpath");
 
-        if (name == null || "".equals(name)) {
+        if (StringUtils.isBlank(name)) {
             throw new RuntimeException("Protocol name is null");
         }
-        if (port == null || "".equals(port)) {
+        if (StringUtils.isBlank(port)) {
             throw new RuntimeException("Protocol port is null");
         }
-        if (host == null || "".equals(host)) {
+        if (StringUtils.isBlank(host)) {
             throw new RuntimeException("Protocol host is null");
-        }
-        if (contextpath == null || "".equals(contextpath)) {
-            throw new RuntimeException("Protocol contextpath is null");
         }
 
         beanDefinition.getPropertyValues().addPropertyValue("name", name);

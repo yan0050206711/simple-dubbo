@@ -7,6 +7,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Registry extends BaseConfigBean implements InitializingBean, ApplicationContextAware {
@@ -17,7 +18,7 @@ public class Registry extends BaseConfigBean implements InitializingBean, Applic
 
     private String address;
 
-    private static Map<String, BaseRegistry> registryMap;
+    private static Map<String, BaseRegistry> registryMap = new HashMap<>();
 
     private static ApplicationContext applicationContext;
 

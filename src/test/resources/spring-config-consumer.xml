@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:soa="http://www.tstd2.com/schema/soa"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd         
+						http://www.tstd2.com/schema/soa
+						http://www.tstd2.com/shcema/soa.xsd">
+
+
+    <soa:registry address="127.0.0.1:6380" />
+
+    <soa:protocol name="soa-test" port="9000" host="127.0.0.1" />
+
+    <soa:reference id="calcService" interface="com.tstd2.rpc.test.service.CalcService" />
+	
+
+</beans>

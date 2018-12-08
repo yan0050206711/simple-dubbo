@@ -1,5 +1,6 @@
 package com.tstd2.rpc.spring.parse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -26,10 +27,13 @@ public class RegistryBeanDefinitionParse implements BeanDefinitionParser {
         String protocol = element.getAttribute("protocol");
         String address = element.getAttribute("address");
 
-        if (protocol == null || "".equals(protocol)) {
-            throw new RuntimeException("Registry protocal is null");
+        /**
+         * 默认协议redis
+         */
+        if (StringUtils.isBlank(protocol)) {
+            protocol = "redis";
         }
-        if (address == null || "".equals(address)) {
+        if (StringUtils.isBlank(address)) {
             throw new RuntimeException("Registry address is null");
         }
 

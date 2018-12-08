@@ -1,5 +1,6 @@
 package com.tstd2.rpc.spring.parse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -30,23 +31,29 @@ public class ReferenceBeanDefinitionParse implements BeanDefinitionParser {
         String cluster = element.getAttribute("cluster");
         String retries = element.getAttribute("retries");
 
-        if (id == null || "".equals(id)) {
+        if (StringUtils.isBlank(id)) {
             throw new RuntimeException("Reference id is null");
         }
-        if (inf == null || "".equals(inf)) {
+        if (StringUtils.isBlank(inf)) {
             throw new RuntimeException("Reference inf is null");
         }
-        if (loadbalance == null || "".equals(loadbalance)) {
-            throw new RuntimeException("Reference loadbalance is null");
+        if (StringUtils.isBlank(loadbalance)) {
+            loadbalance = "random";
         }
-        if (protocol == null || "".equals(protocol)) {
-            throw new RuntimeException("Reference protocol is null");
+        /**
+         * 默认netty
+         */
+        if (StringUtils.isBlank(protocol)) {
+            protocol = "netty";
         }
-        if (cluster == null || "".equals(cluster)) {
-            throw new RuntimeException("Reference cluster is null");
+        if (StringUtils.isBlank(cluster)) {
+            cluster = "failover";
         }
-        if (retries == null || "".equals(retries)) {
-            throw new RuntimeException("Reference retries is null");
+        /**
+         * 默认不重试
+         */
+        if (StringUtils.isBlank(retries)) {
+            retries = "1";
         }
 
 

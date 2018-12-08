@@ -1,5 +1,6 @@
 package com.tstd2.rpc.spring.parse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -27,14 +28,17 @@ public class ServiceBeanDefinitionParse implements BeanDefinitionParser {
         String ref = element.getAttribute("ref");
         String protocol = element.getAttribute("protocol");
 
-        if (inf == null || "".equals(inf)) {
+        if (StringUtils.isBlank(inf)) {
             throw new RuntimeException("Service inf is null");
         }
-        if (ref == null || "".equals(ref)) {
+        if (StringUtils.isBlank(ref)) {
             throw new RuntimeException("Service ref is null");
         }
-        if (protocol == null || "".equals(protocol)) {
-            throw new RuntimeException("Service protocol is null");
+        /**
+         * 默认netty
+         */
+        if (StringUtils.isBlank(protocol)) {
+            protocol = "netty";
         }
 
         beanDefinition.getPropertyValues().addPropertyValue("inf", inf);
