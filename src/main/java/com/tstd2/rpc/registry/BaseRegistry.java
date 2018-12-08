@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface BaseRegistry {
 
-    boolean registry(String ref, ApplicationContext application);
+    boolean registry(String interfaceName, ApplicationContext application);
 
-    List<String> getRegistry(String id, ApplicationContext application);
+    List<RegistryNode> getRegistry(String interfaceName, ApplicationContext application);
 
 }

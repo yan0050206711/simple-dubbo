@@ -17,6 +17,8 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
+import java.util.UUID;
+
 public class NettyUtil {
 
     public static void startServer(String port) throws Exception {
@@ -50,7 +52,6 @@ public class NettyUtil {
         }
     }
 
-
     public static Object sendMsg(NodeInfo nodeInfo, final Invocation invocation) throws Exception {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         final NettyClientInHandler nettyClientInHandler = new NettyClientInHandler();
@@ -77,13 +78,15 @@ public class NettyUtil {
             ChannelFuture f = bootstrap.connect(nodeInfo.getHost(), Integer.parseInt(nodeInfo.getPort()));
 
             Request request = new Request();
-            request.setServiceId(invocation.getReference().getId());
+            request.setSessionId(UUID.randomUUID().toString());
+            request.setClassName(invocation.getReference().getInf());
             request.setMethodName(invocation.getMethod().getName());
             request.setParametersType(invocation.getMethod().getParameterTypes());
             request.setParametersValue(invocation.getObjs());
 
-            f.channel().writeAndFlush(request);
-            f.channel().closeFuture().sync();
+            Channel channel = f.sync().channel();
+            channel.writeAndFlush(request);
+            channel.closeFuture().sync();
 
         } catch (Exception e) {
             e.printStackTrace();

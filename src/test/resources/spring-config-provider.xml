@@ -9,9 +9,12 @@
 
     <soa:registry address="127.0.0.1:6380" />
 
-    <soa:protocol name="soa-test" port="9000" host="127.0.0.1" />
+    <soa:protocol port="9000" host="127.0.0.1" />
 
     <bean id="calcService" class="com.tstd2.rpc.test.service.CalcServiceImpl" />
     <soa:service interface="com.tstd2.rpc.test.service.CalcService" ref="calcService" />
+
+    <bean id="userService" class="com.tstd2.rpc.test.service.UserServiceImpl" />
+    <soa:service interface="com.tstd2.rpc.test.service.UserService" ref="userService" />
 
 </beans>

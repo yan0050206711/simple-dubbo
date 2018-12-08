@@ -6,7 +6,10 @@ public class Request implements Serializable {
 
     private static final long serialVersionUID = 3117006402387814342L;
 
-    private String serviceId;
+    /**
+     * 请求ID
+     */
+    private String sessionId;
     /**
      * 类名
      */
@@ -24,12 +27,16 @@ public class Request implements Serializable {
      */
     private Object[] parametersValue;
 
-    public String getServiceId() {
-        return serviceId;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getClassName() {

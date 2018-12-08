@@ -7,18 +7,18 @@ import java.util.List;
 
 public class BaseRegistryDelegate {
 
-    public static void registry(String ref, ApplicationContext application) {
+    public static void registry(String interfaceName, ApplicationContext application) {
         Registry registry = application.getBean(Registry.class);
         String protocol = registry.getProtocol();
         BaseRegistry registryBean = registry.getRegistryMap().get(protocol);
-        registryBean.registry(ref, application);
+        registryBean.registry(interfaceName, application);
     }
 
-    public static List<String> getRegistry(String id, ApplicationContext application) {
+    public static List<RegistryNode> getRegistry(String interfaceName, ApplicationContext application) {
         Registry registry = application.getBean(Registry.class);
         String protocol = registry.getProtocol();
         BaseRegistry registryBean = registry.getRegistryMap().get(protocol);
-        return registryBean.getRegistry(id, application);
+        return registryBean.getRegistry(interfaceName, application);
     }
 
 }

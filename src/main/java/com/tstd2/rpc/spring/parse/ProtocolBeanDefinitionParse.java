@@ -30,7 +30,7 @@ public class ProtocolBeanDefinitionParse implements BeanDefinitionParser {
         String contextpath = element.getAttribute("contextpath");
 
         if (StringUtils.isBlank(name)) {
-            throw new RuntimeException("Protocol name is null");
+            name = "netty";
         }
         if (StringUtils.isBlank(port)) {
             throw new RuntimeException("Protocol port is null");
@@ -43,7 +43,7 @@ public class ProtocolBeanDefinitionParse implements BeanDefinitionParser {
         beanDefinition.getPropertyValues().addPropertyValue("port", port);
         beanDefinition.getPropertyValues().addPropertyValue("host", host);
         beanDefinition.getPropertyValues().addPropertyValue("contextpath", contextpath);
-        parserContext.getRegistry().registerBeanDefinition("Registry" + name, beanDefinition);
+        parserContext.getRegistry().registerBeanDefinition("Protocol-" + name, beanDefinition);
 
         return beanDefinition;
     }

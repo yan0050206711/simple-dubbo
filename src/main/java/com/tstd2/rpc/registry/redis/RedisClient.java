@@ -1,4 +1,4 @@
-package com.tstd2.rpc.redis;
+package com.tstd2.rpc.registry.redis;
 
 import redis.clients.jedis.BinaryClient.LIST_POSITION;
 import redis.clients.jedis.Jedis;

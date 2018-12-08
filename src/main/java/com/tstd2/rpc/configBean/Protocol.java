@@ -80,20 +80,18 @@ public class Protocol extends BaseConfigBean implements InitializingBean, Applic
             return;
         }
 
-        if (!"netty".equals(name)) {
-            return;
-        }
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    NettyUtil.startServer(port);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if ("netty".equals(name)) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        NettyUtil.startServer(port);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }).start();
+            }).start();
+        }
 
     }
 }

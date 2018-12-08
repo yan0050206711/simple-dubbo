@@ -15,11 +15,12 @@ public class NettyServerInHandler extends ChannelInboundHandlerAdapter {
         Request request = (Request) msg;
 
         Response response = new Response();
-        response.setServiceId(request.getServiceId());
+        response.setSessionId(request.getSessionId());
 
         // 从spring服务实例对象
         ApplicationContext application = Service.getApplicationContext();
-        Object clazz = application.getBean(request.getServiceId());
+//        Object clazz = application.getBean(request.getServiceId());
+        Object clazz = application.getBean(Class.forName(request.getClassName()));
 
         // 代理对象里面方法名称和方法参数
         Method method = clazz.getClass().getMethod(request.getMethodName(), request.getParametersType());

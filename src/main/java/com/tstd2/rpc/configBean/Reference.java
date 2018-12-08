@@ -11,6 +11,7 @@ import com.tstd2.rpc.loadbalance.RandomLoadBalance;
 import com.tstd2.rpc.loadbalance.RoundrobLoadBalance;
 import com.tstd2.rpc.proxy.advice.InvokeInvocationHandler;
 import com.tstd2.rpc.registry.BaseRegistryDelegate;
+import com.tstd2.rpc.registry.RegistryNode;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -40,7 +41,7 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
 
     private String retries;
 
-    private static ApplicationContext application;
+    private static ApplicationContext applicationContext;
 
     private Invoke invoke;
 
@@ -53,7 +54,7 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
     /**
      * 生产者的多个服务的列表
      */
-    private List<String> registryInfo = new ArrayList<>();
+    private List<RegistryNode> registryInfo = new ArrayList<>();
 
     static {
         invokes.put("netty", new NettyInvoke());
@@ -115,12 +116,8 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         this.retries = retries;
     }
 
-    public static ApplicationContext getApplication() {
-        return application;
-    }
-
-    public static void setApplication(ApplicationContext application) {
-        Reference.application = application;
+    public static ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
     public Invoke getInvoke() {
@@ -155,11 +152,11 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         Reference.clusters = clusters;
     }
 
-    public List<String> getRegistryInfo() {
+    public List<RegistryNode> getRegistryInfo() {
         return registryInfo;
     }
 
-    public void setRegistryInfo(List<String> registryInfo) {
+    public void setRegistryInfo(List<RegistryNode> registryInfo) {
         this.registryInfo = registryInfo;
     }
 
@@ -171,7 +168,7 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         if (protocol != null && !"".equals(protocol)) {
             invoke = invokes.get(protocol);
         } else {
-            Protocol prot = application.getBean(Protocol.class);
+            Protocol prot = applicationContext.getBean(Protocol.class);
             if (prot != null) {
                 invoke = invokes.get(prot.getName());
             } else {
@@ -207,12 +204,11 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        registryInfo = BaseRegistryDelegate.getRegistry(id, application);
-        System.out.println(registryInfo);
+        registryInfo = BaseRegistryDelegate.getRegistry(inf, applicationContext);
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-
+        Reference.applicationContext = applicationContext;
     }
 }

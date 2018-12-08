@@ -7,15 +7,15 @@ import java.io.Serializable;
  */
 public class Response implements Serializable {
 
-    private String serviceId;
+    private String sessionId;
     private Object result;
 
-    public String getServiceId() {
-        return serviceId;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public Object getResult() {

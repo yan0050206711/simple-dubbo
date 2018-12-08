@@ -1,9 +1,7 @@
 package com.tstd2.rpc.loadbalance;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.tstd2.rpc.configBean.Protocol;
-import com.tstd2.rpc.configBean.Registry;
+import com.tstd2.rpc.registry.RegistryNode;
 
 import java.util.List;
 import java.util.Random;
@@ -13,17 +11,12 @@ import java.util.Random;
  */
 public class RandomLoadBalance implements LoadBalance {
 
-    private static final Gson GSON = new GsonBuilder().create();
-
     @Override
-    public NodeInfo deSelect(List<String> registryInfo) {
+    public NodeInfo deSelect(List<RegistryNode> registryInfo) {
         Random random = new Random();
         int index = random.nextInt(registryInfo.size());
-        String registry = registryInfo.get(index);
-
-        Registry registryObj = GSON.fromJson(registry, Registry.class);
-
-        Protocol protocol = GSON.fromJson(registryObj.getProtocol(), Protocol.class);
+        RegistryNode node = registryInfo.get(index);
+        Protocol protocol = node.getProtocol();
 
         NodeInfo nodeInfo = new NodeInfo();
         nodeInfo.setHost(protocol.getHost());

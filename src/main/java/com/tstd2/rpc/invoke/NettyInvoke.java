@@ -4,6 +4,7 @@ import com.tstd2.rpc.configBean.Reference;
 import com.tstd2.rpc.loadbalance.LoadBalance;
 import com.tstd2.rpc.loadbalance.NodeInfo;
 import com.tstd2.rpc.netty.NettyUtil;
+import com.tstd2.rpc.registry.RegistryNode;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class NettyInvoke implements Invoke {
     @Override
     public Object invoke(Invocation invocation) throws Exception {
 
-        List<String> registryInfo = invocation.getReference().getRegistryInfo();
+        List<RegistryNode> registryInfo = invocation.getReference().getRegistryInfo();
 
         // 负载均衡
         String loadbalance = invocation.getReference().getLoadbalance();

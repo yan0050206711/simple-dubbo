@@ -8,7 +8,6 @@ import org.springframework.context.ApplicationContextAware;
 
 public class Service extends BaseConfigBean implements InitializingBean, ApplicationContextAware {
 
-
     private static final long serialVersionUID = -8551143436340555022L;
 
     private String inf;
@@ -54,6 +53,6 @@ public class Service extends BaseConfigBean implements InitializingBean, Applica
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        BaseRegistryDelegate.registry(ref, applicationContext);
+        BaseRegistryDelegate.registry(inf, applicationContext);
     }
 }

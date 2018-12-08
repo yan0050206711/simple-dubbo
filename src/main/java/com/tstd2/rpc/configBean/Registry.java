@@ -1,7 +1,7 @@
 package com.tstd2.rpc.configBean;
 
 import com.tstd2.rpc.registry.BaseRegistry;
-import com.tstd2.rpc.registry.RedisRegistry;
+import com.tstd2.rpc.registry.redis.RedisRegistry;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;

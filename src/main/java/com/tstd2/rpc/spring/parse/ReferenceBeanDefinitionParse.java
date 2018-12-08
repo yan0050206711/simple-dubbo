@@ -63,7 +63,7 @@ public class ReferenceBeanDefinitionParse implements BeanDefinitionParser {
         beanDefinition.getPropertyValues().addPropertyValue("protocol", protocol);
         beanDefinition.getPropertyValues().addPropertyValue("cluster", cluster);
         beanDefinition.getPropertyValues().addPropertyValue("retries", retries);
-        parserContext.getRegistry().registerBeanDefinition("Registry" + id, beanDefinition);
+        parserContext.getRegistry().registerBeanDefinition("Reference-" + id, beanDefinition);
 
         return beanDefinition;
     }

@@ -1,11 +1,12 @@
-package com.tstd2.rpc.registry;
+package com.tstd2.rpc.registry.redis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tstd2.rpc.configBean.Protocol;
 import com.tstd2.rpc.configBean.Registry;
 import com.tstd2.rpc.configBean.Service;
-import com.tstd2.rpc.redis.RedisClient;
+import com.tstd2.rpc.registry.BaseRegistry;
+import com.tstd2.rpc.registry.RegistryNode;
 import org.springframework.context.ApplicationContext;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -17,13 +18,12 @@ import java.util.*;
  */
 public class RedisRegistry implements BaseRegistry {
 
-
     private static final Gson GSON = new GsonBuilder().create();
 
     private RedisClient redisClient;
 
     @Override
-    public boolean registry(String ref, ApplicationContext application) {
+    public boolean registry(String interfaceName, ApplicationContext application) {
         try {
             Protocol protocol = application.getBean(Protocol.class);
             Map<String, Service> services = application.getBeansOfType(Service.class);
@@ -32,15 +32,12 @@ public class RedisRegistry implements BaseRegistry {
             this.createRedisPool(registry.getAddress());
 
             for (Map.Entry<String, Service> entry : services.entrySet()) {
-                if (entry.getValue().getRef().equals(ref)) {
-                    Map<String, String> map = new HashMap<>(2);
-                    map.put("protocol", GSON.toJson(protocol));
-                    map.put("service", GSON.toJson(entry.getValue()));
+                if (entry.getValue().getInf().equals(interfaceName)) {
+                    RegistryNode node = new RegistryNode();
+                    node.setProtocol(protocol);
+                    node.setService(entry.getValue());
 
-                    Map<String, String> ipport = new HashMap<>(1);
-                    ipport.put(protocol.getHost() + ":" + protocol.getPort(), GSON.toJson(map));
-
-                    lpush(ref, ipport);
+                    this.sadd(interfaceName, node);
                 }
             }
 
@@ -51,45 +48,50 @@ public class RedisRegistry implements BaseRegistry {
         return false;
     }
 
-    private void lpush(String ref, Map<String, String> ipport) {
-        if (redisClient.exists(ref)) {
-            Set<String> keys = ipport.keySet();
-            String ipportStr = "";
-            for (String k : keys) {
-                ipportStr = k;
-            }
+    private void sadd(String interfaceName, RegistryNode registryNode) {
+        if (redisClient.exists(interfaceName)) {
 
-            List<String> registryInfo = this.redisClient.lrange(ref, 0, -1);
-            List<String> newRegistry = new ArrayList<>();
+            String host = registryNode.getProtocol().getHost();
+            String port = registryNode.getProtocol().getPort();
+
+            Set<String> nodeSet = this.redisClient.smembers(interfaceName);
 
             boolean isold = false;
 
-            for (String node : registryInfo) {
-                Map<String, String> map = GSON.fromJson(node, Map.class);
-                if (map.containsKey(ipportStr)) {
-                    newRegistry.add(GSON.toJson(ipport));
+            for (String nodeJson : nodeSet) {
+                RegistryNode node = GSON.fromJson(nodeJson, RegistryNode.class);
+
+                // 是有有相同的机器
+                if (host.equals(node.getProtocol().getHost()) && port.equals(node.getProtocol().getPort())) {
                     isold = true;
+                    break;
                 }
             }
 
             if (isold) {
-                if (newRegistry.size() > 0) {
-                    this.redisClient.del(ref);
-                    String[] newReStr = new String[newRegistry.size()];
-                    for (int i=0; i<newRegistry.size(); i++) {
-                        newReStr[i] = newRegistry.get(i);
-                    }
-                    this.redisClient.lpush(ref, newReStr);
-                }
+                // 存在则更新
+                this.redisClient.del(interfaceName);
+                this.redisClient.sadd(interfaceName, GSON.toJson(registryNode));
+            } else {
+                // 新加入的机器
+                this.redisClient.sadd(interfaceName, GSON.toJson(registryNode));
             }
+        } else {
+            // 第一次加入
+            this.redisClient.sadd(interfaceName, GSON.toJson(registryNode));
         }
     }
 
     /**
      * 初始化redis
+     *
      * @param address
      */
     private synchronized void createRedisPool(String address) {
+
+        if (this.redisClient != null) {
+            return;
+        }
 
         RedisClient redisClient = new RedisClient();
         // 数据库链接池配置
@@ -107,14 +109,19 @@ public class RedisRegistry implements BaseRegistry {
         this.redisClient = redisClient;
     }
 
-
     @Override
-    public List<String> getRegistry(String id, ApplicationContext application) {
+    public List<RegistryNode> getRegistry(String interfaceName, ApplicationContext application) {
         Registry registry = application.getBean(Registry.class);
         this.createRedisPool(registry.getAddress());
-        if (this.redisClient.exists(id)) {
-            return this.redisClient.lrange(id, 0, -1);
+        if (this.redisClient.exists(interfaceName)) {
+            Set<String> set = this.redisClient.smembers(interfaceName);
+            List<RegistryNode> nodeList = new ArrayList<>();
+            for (String str : set) {
+                nodeList.add(GSON.fromJson(str, RegistryNode.class));
+            }
+            return nodeList;
         }
         return null;
     }
+
 }

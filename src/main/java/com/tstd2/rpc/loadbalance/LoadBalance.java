@@ -1,5 +1,7 @@
 package com.tstd2.rpc.loadbalance;
 
+import com.tstd2.rpc.registry.RegistryNode;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,6 @@ import java.util.List;
  */
 public interface LoadBalance {
 
-    NodeInfo deSelect(List<String> registryInfo);
+    NodeInfo deSelect(List<RegistryNode> registryInfo);
 
 }
