@@ -1,4 +1,4 @@
-package com.tstd2.rpc.netty;
+package com.tstd2.rpc.netty.model;
 
 import java.io.Serializable;
 

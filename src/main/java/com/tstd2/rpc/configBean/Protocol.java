@@ -1,6 +1,7 @@
 package com.tstd2.rpc.configBean;
 
-import com.tstd2.rpc.netty.NettyUtil;
+import com.tstd2.rpc.netty.NettyClient;
+import com.tstd2.rpc.netty.NettyServer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -85,7 +86,7 @@ public class Protocol extends BaseConfigBean implements InitializingBean, Applic
                 @Override
                 public void run() {
                     try {
-                        NettyUtil.startServer(port);
+                        NettyServer.start(port);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

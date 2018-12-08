@@ -26,7 +26,6 @@ import java.util.Map;
 
 public class Reference extends BaseConfigBean implements FactoryBean, InitializingBean, ApplicationContextAware {
 
-
     private static final long serialVersionUID = 8473037023470434275L;
 
     private String id;

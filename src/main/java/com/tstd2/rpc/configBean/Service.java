@@ -53,6 +53,9 @@ public class Service extends BaseConfigBean implements InitializingBean, Applica
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        /**
+         * 将本service注册到注册中心
+         */
         BaseRegistryDelegate.registry(inf, applicationContext);
     }
 }

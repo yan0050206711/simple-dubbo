@@ -3,7 +3,7 @@ package com.tstd2.rpc.invoke;
 import com.tstd2.rpc.configBean.Reference;
 import com.tstd2.rpc.loadbalance.LoadBalance;
 import com.tstd2.rpc.loadbalance.NodeInfo;
-import com.tstd2.rpc.netty.NettyUtil;
+import com.tstd2.rpc.netty.NettyClient;
 import com.tstd2.rpc.registry.RegistryNode;
 
 import java.util.List;
@@ -17,12 +17,11 @@ public class NettyInvoke implements Invoke {
 
         // 负载均衡
         String loadbalance = invocation.getReference().getLoadbalance();
-        Reference reference = invocation.getReference();
-        LoadBalance loadBalanceBean = reference.getLoadBalances().get(loadbalance);
-
+        LoadBalance loadBalanceBean = Reference.getLoadBalances().get(loadbalance);
+        // 通过负载均衡策略选择一个节点
         NodeInfo nodeInfo = loadBalanceBean.deSelect(registryInfo);
 
-        return NettyUtil.sendMsg(nodeInfo, invocation);
+        return NettyClient.sendMsg(nodeInfo, invocation);
     }
 
 }
