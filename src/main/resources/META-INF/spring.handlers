@@ -1,1 +1,1 @@
-http\://www.tstd2.com/schema/soa=com.tstd2.rpc.spring.parse.SOANamespaceHandler
+http\://www.tstd2.com/schema/soa=com.tstd2.soa.config.spring.parse.SOANamespaceHandler

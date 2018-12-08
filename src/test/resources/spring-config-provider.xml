@@ -7,14 +7,14 @@
 						http://www.tstd2.com/schema/soa
 						http://www.tstd2.com/shcema/soa.xsd">
 
-    <soa:registry address="127.0.0.1:6380" />
+    <soa:registry protocol="redis" address="127.0.0.1:6380" />
 
-    <soa:protocol port="9000" host="127.0.0.1" />
+    <soa:protocol port="9000" />
 
-    <bean id="calcService" class="com.tstd2.rpc.test.service.CalcServiceImpl" />
-    <soa:service interface="com.tstd2.rpc.test.service.CalcService" ref="calcService" />
+    <bean id="calcService" class="com.tstd2.soa.test.service.CalcServiceImpl" />
+    <soa:service interface="com.tstd2.soa.test.service.CalcService" ref="calcService" />
 
-    <bean id="userService" class="com.tstd2.rpc.test.service.UserServiceImpl" />
-    <soa:service interface="com.tstd2.rpc.test.service.UserService" ref="userService" />
+    <bean id="userService" class="com.tstd2.soa.test.service.UserServiceImpl" />
+    <soa:service interface="com.tstd2.soa.test.service.UserService" ref="userService" />
 
 </beans>
