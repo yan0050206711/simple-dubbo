@@ -39,7 +39,7 @@ public class RegistryBeanDefinitionParse implements BeanDefinitionParser {
 
         beanDefinition.getPropertyValues().addPropertyValue("protocol", protocol);
         beanDefinition.getPropertyValues().addPropertyValue("address", address);
-        parserContext.getRegistry().registerBeanDefinition("Registry" + address, beanDefinition);
+        parserContext.getRegistry().registerBeanDefinition("Registry-" + address, beanDefinition);
 
         return beanDefinition;
     }

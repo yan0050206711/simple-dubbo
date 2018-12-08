@@ -2,7 +2,12 @@ package com.tstd2.soa.remoting.netty;
 
 import com.tstd2.soa.remoting.netty.handler.NettyClientInHandler;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -12,45 +17,36 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 
-import java.util.Random;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NettyChannelPool {
 
-    private Channel[] channels;
-    private Object[] locks;
-    private static final int MAX_CHANNEL_COUNT = 4;
-
-    public NettyChannelPool() {
-        this.channels = new Channel[MAX_CHANNEL_COUNT];
-        this.locks = new Object[MAX_CHANNEL_COUNT];
-        for (int i = 0; i < MAX_CHANNEL_COUNT; i++) {
-            this.locks[i] = new Object();
-        }
-    }
+    private Map<String, Channel> channels = new ConcurrentHashMap<>();
 
     /**
      * 同步获取netty channel
      */
     public Channel syncGetChannel(String ip, int port) throws InterruptedException {
-        //产生一个随机数,随机的从数组中获取channel
-        int index = new Random().nextInt(MAX_CHANNEL_COUNT);
-        Channel channel = channels[index];
-        //如果能获取到,直接返回
+
+        // 取出对应ip port的channel
+        String host = ip + ":" + port;
+        Channel channel = channels.get(host);
+        // 如果能获取到,直接返回
         if (channel != null && channel.isActive()) {
             return channel;
         }
 
-        synchronized (locks[index]) {
-            channel = channels[index];
-            //这里必须再次做判断,当锁被释放后，之前等待的线程已经可以直接拿到结果了。
+        synchronized (host) {
+            // 这里必须再次做判断,当锁被释放后，之前等待的线程已经可以直接拿到结果了。
             if (channel != null && channel.isActive()) {
                 return channel;
             }
 
-            //开始跟服务端交互，获取channel
+            // 开始跟服务端交互，获取channel
             channel = connectToServer(ip, port);
 
-            channels[index] = channel;
+            channels.put(host, channel);
         }
 
         return channel;
