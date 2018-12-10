@@ -1,5 +1,7 @@
 package com.tstd2.soa.config;
 
+import com.tstd2.soa.registry.BaseRegistryDelegate;
+import com.tstd2.soa.registry.RegistryNode;
 import com.tstd2.soa.rpc.cluster.Cluster;
 import com.tstd2.soa.rpc.cluster.FailfastClusterInvoke;
 import com.tstd2.soa.rpc.cluster.FailoverClusterInvoke;
@@ -9,16 +11,14 @@ import com.tstd2.soa.rpc.invoke.NettyInvoke;
 import com.tstd2.soa.rpc.loadbalance.LoadBalance;
 import com.tstd2.soa.rpc.loadbalance.RandomLoadBalance;
 import com.tstd2.soa.rpc.loadbalance.RoundrobLoadBalance;
-import com.tstd2.soa.rpc.proxy.jdk.InvokeInvocationHandler;
-import com.tstd2.soa.registry.BaseRegistryDelegate;
-import com.tstd2.soa.registry.RegistryNode;
+import com.tstd2.soa.rpc.proxy.RpcProxy;
+import com.tstd2.soa.rpc.proxy.jdk.JdkProxy;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -190,9 +190,8 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         }
 
         // 生成一个代理对象
-        return Proxy.newProxyInstance(this.getClass().getClassLoader(),
-                new Class<?>[]{Class.forName(inf)},
-                new InvokeInvocationHandler(invoke, this));
+        RpcProxy proxy = new JdkProxy();
+        return proxy.getObject(inf, invoke, this);
     }
 
     /**
