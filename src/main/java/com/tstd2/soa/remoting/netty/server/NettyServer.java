@@ -1,6 +1,5 @@
-package com.tstd2.soa.remoting.netty;
+package com.tstd2.soa.remoting.netty.server;
 
-import com.tstd2.soa.remoting.netty.handler.NettyServerInHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

@@ -26,20 +26,17 @@ public class RedisRegistry implements BaseRegistry {
     public boolean registry(String interfaceName, ApplicationContext application) {
         try {
             Protocol protocol = application.getBean(Protocol.class);
-            Map<String, Service> services = application.getBeansOfType(Service.class);
+//            Map<String, Service> services = application.getBeansOfType(Service.class);
+            Service service = application.getBean("Service-" + interfaceName, Service.class);
 
             Registry registry = application.getBean(Registry.class);
             this.createRedisPool(registry.getAddress());
 
-            for (Map.Entry<String, Service> entry : services.entrySet()) {
-                if (entry.getValue().getInf().equals(interfaceName)) {
-                    RegistryNode node = new RegistryNode();
-                    node.setProtocol(protocol);
-                    node.setService(entry.getValue());
+            RegistryNode node = new RegistryNode();
+            node.setProtocol(protocol);
+            node.setService(service);
 
-                    this.sadd(interfaceName, node);
-                }
-            }
+            this.sadd(interfaceName, node);
 
             return true;
         } catch (Exception e) {

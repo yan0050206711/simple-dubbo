@@ -3,7 +3,7 @@ package com.tstd2.soa.rpc.invoke;
 import com.tstd2.soa.config.Reference;
 import com.tstd2.soa.rpc.loadbalance.LoadBalance;
 import com.tstd2.soa.rpc.loadbalance.NodeInfo;
-import com.tstd2.soa.remoting.netty.NettyClient;
+import com.tstd2.soa.remoting.netty.client.NettyClient;
 import com.tstd2.soa.registry.RegistryNode;
 
 import java.util.List;

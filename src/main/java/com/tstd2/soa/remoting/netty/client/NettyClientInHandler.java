@@ -1,7 +1,5 @@
-package com.tstd2.soa.remoting.netty.handler;
+package com.tstd2.soa.remoting.netty.client;
 
-import com.tstd2.soa.remoting.netty.CallBack;
-import com.tstd2.soa.remoting.netty.CallBackHolder;
 import com.tstd2.soa.remoting.netty.model.Response;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

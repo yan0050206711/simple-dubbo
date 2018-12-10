@@ -1,4 +1,4 @@
-package com.tstd2.soa.remoting.netty;
+package com.tstd2.soa.remoting.netty.client;
 
 import com.tstd2.soa.rpc.invoke.Invocation;
 import com.tstd2.soa.rpc.loadbalance.NodeInfo;

@@ -1,4 +1,4 @@
-package com.tstd2.soa.remoting.netty;
+package com.tstd2.soa.remoting.netty.client;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

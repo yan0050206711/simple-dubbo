@@ -9,6 +9,8 @@ public class Response implements Serializable {
 
     private String sessionId;
     private Object result;
+    private String resultCode;
+    private String errorMsg;
 
     public String getSessionId() {
         return sessionId;
@@ -24,5 +26,21 @@ public class Response implements Serializable {
 
     public void setResult(Object result) {
         this.result = result;
+    }
+
+    public String getResultCode() {
+        return resultCode;
+    }
+
+    public void setResultCode(String resultCode) {
+        this.resultCode = resultCode;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }
