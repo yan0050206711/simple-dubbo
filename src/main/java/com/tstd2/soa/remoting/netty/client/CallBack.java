@@ -1,4 +1,4 @@
-package com.tstd2.soa.remoting.netty;
+package com.tstd2.soa.remoting.netty.client;
 
 
 import com.tstd2.soa.remoting.netty.model.Response;
@@ -24,13 +24,13 @@ public class CallBack {
                 return this.response.getResult();
             }
 
-            // 设定一下超时时间，rpc服务器太久没有相应的话，就默认返回空吧。
+            // 超时设置
             finish.await( timeout, TimeUnit.MILLISECONDS);
 
             if (this.response != null) {
                 return this.response.getResult();
             } else {
-                return null;
+                throw new RuntimeException("timeout...");
             }
         } finally {
             lock.unlock();

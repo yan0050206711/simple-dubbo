@@ -1,6 +1,6 @@
 package com.tstd2.soa.config;
 
-import com.tstd2.soa.remoting.netty.NettyServer;
+import com.tstd2.soa.remoting.netty.server.NettyServer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -19,6 +19,7 @@ public class Protocol extends BaseConfigBean implements InitializingBean, Applic
     private String port;
     private String host;
     private String contextpath;
+    private String threads;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -50,6 +51,14 @@ public class Protocol extends BaseConfigBean implements InitializingBean, Applic
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public String getThreads() {
+        return threads;
+    }
+
+    public void setThreads(String threads) {
+        this.threads = threads;
     }
 
     public String getContextpath() {

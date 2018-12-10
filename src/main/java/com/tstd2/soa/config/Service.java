@@ -16,6 +16,8 @@ public class Service extends BaseConfigBean implements InitializingBean, Applica
 
     private String protocol;
 
+    private String timeout;
+
     private static ApplicationContext applicationContext;
 
     public String getInf() {
@@ -40,6 +42,14 @@ public class Service extends BaseConfigBean implements InitializingBean, Applica
 
     public void setProtocol(String protocol) {
         this.protocol = protocol;
+    }
+
+    public String getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(String timeout) {
+        this.timeout = timeout;
     }
 
     public static ApplicationContext getApplicationContext() {

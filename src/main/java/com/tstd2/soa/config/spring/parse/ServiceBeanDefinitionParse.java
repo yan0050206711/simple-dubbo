@@ -27,6 +27,7 @@ public class ServiceBeanDefinitionParse implements BeanDefinitionParser {
         String inf = element.getAttribute("interface");
         String ref = element.getAttribute("ref");
         String protocol = element.getAttribute("protocol");
+        String timeout = element.getAttribute("timeout");
 
         if (StringUtils.isBlank(inf)) {
             throw new RuntimeException("Service inf is null");
@@ -41,10 +42,18 @@ public class ServiceBeanDefinitionParse implements BeanDefinitionParser {
             protocol = "netty";
         }
 
+        /**
+         * 默认3s
+         */
+        if (StringUtils.isBlank(timeout)) {
+            timeout = "3000";
+        }
+
         beanDefinition.getPropertyValues().addPropertyValue("inf", inf);
         beanDefinition.getPropertyValues().addPropertyValue("ref", ref);
         beanDefinition.getPropertyValues().addPropertyValue("protocol", protocol);
-        parserContext.getRegistry().registerBeanDefinition("Service-" + ref, beanDefinition);
+        beanDefinition.getPropertyValues().addPropertyValue("timeout", timeout);
+        parserContext.getRegistry().registerBeanDefinition("Service-" + inf, beanDefinition);
 
         return beanDefinition;
     }

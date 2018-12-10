@@ -29,6 +29,7 @@ public class ProtocolBeanDefinitionParse implements BeanDefinitionParser {
         String port = element.getAttribute("port");
         String host = element.getAttribute("host");
         String contextpath = element.getAttribute("contextpath");
+        String threads = element.getAttribute("threads");
 
         if (StringUtils.isBlank(name)) {
             name = "netty";
@@ -46,10 +47,18 @@ public class ProtocolBeanDefinitionParse implements BeanDefinitionParser {
             throw new RuntimeException("Protocol port is null");
         }
 
+        /**
+         * 默认cpu核心数
+         */
+        if (StringUtils.isBlank(threads)) {
+            threads = Runtime.getRuntime().availableProcessors() + "";
+        }
+
         beanDefinition.getPropertyValues().addPropertyValue("name", name);
         beanDefinition.getPropertyValues().addPropertyValue("port", port);
         beanDefinition.getPropertyValues().addPropertyValue("host", host);
         beanDefinition.getPropertyValues().addPropertyValue("contextpath", contextpath);
+        beanDefinition.getPropertyValues().addPropertyValue("threads", threads);
         parserContext.getRegistry().registerBeanDefinition("Protocol-" + name, beanDefinition);
 
         return beanDefinition;

@@ -25,6 +25,7 @@
             <xsd:attribute name="port" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="host" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="contextpath" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="threads" type="xsd:string"></xsd:attribute>
         </xsd:complexType>
     </xsd:element>
     <xsd:element name="service">
@@ -32,6 +33,7 @@
             <xsd:attribute name="interface" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="ref" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="protocol" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="timeout" type="xsd:string"></xsd:attribute>
         </xsd:complexType>
     </xsd:element>
 
