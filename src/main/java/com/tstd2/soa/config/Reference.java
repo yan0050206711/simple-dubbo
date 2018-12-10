@@ -44,12 +44,19 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
 
     private static ApplicationContext applicationContext;
 
-    private Invoke invoke;
-
+    /**
+     * 调用者
+     */
     private static Map<String, Invoke> invokes = new HashMap<>();
 
+    /**
+     * 负载策略
+     */
     private static Map<String, LoadBalance> loadBalances = new HashMap<>();
 
+    /**
+     * 集群容错策略
+     */
     private static Map<String, Cluster> clusters = new HashMap<>();
 
     /**
@@ -121,14 +128,6 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         return applicationContext;
     }
 
-    public Invoke getInvoke() {
-        return invoke;
-    }
-
-    public void setInvoke(Invoke invoke) {
-        this.invoke = invoke;
-    }
-
     public static Map<String, Invoke> getInvokes() {
         return invokes;
     }
@@ -178,6 +177,7 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
      */
     @Override
     public Object getObject() throws Exception {
+        Invoke invoke;
         if (protocol != null && !"".equals(protocol)) {
             invoke = invokes.get(protocol);
         } else {
