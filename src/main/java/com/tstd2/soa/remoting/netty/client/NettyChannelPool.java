@@ -1,6 +1,5 @@
 package com.tstd2.soa.remoting.netty.client;
 
-import com.tstd2.soa.remoting.netty.client.NettyClientInHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
