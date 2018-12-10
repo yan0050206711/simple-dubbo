@@ -18,11 +18,17 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NettyChannelPool {
 
-    private Map<String, Channel> channels = new ConcurrentHashMap<>();
+    /**
+     * 默认为每一个ip端口建议一个长连接
+     */
+    private Map<String, Channel[]> channelMap = new ConcurrentHashMap<>();
+
+    private int connections = 1;
 
     /**
      * 同步获取netty channel
@@ -31,7 +37,21 @@ public class NettyChannelPool {
 
         // 取出对应ip port的channel
         String host = ip + ":" + port;
-        Channel channel = channels.get(host);
+        Channel[] channels = channelMap.get(host);
+
+        if (channels == null) {
+            synchronized (host) {
+                if (channelMap.get(host) == null) {
+                    channels = new Channel[connections];
+                    channelMap.put(host, channels);
+                }
+            }
+        }
+
+        // 随机取出一个链接
+        int index = new Random().nextInt(connections);
+        Channel channel = channels[index];
+
         // 如果能获取到,直接返回
         if (channel != null && channel.isActive()) {
             return channel;
@@ -46,7 +66,7 @@ public class NettyChannelPool {
             // 开始跟服务端交互，获取channel
             channel = connectToServer(ip, port);
 
-            channels.put(host, channel);
+            channelMap.get(host)[index] = channel;
         }
 
         return channel;
