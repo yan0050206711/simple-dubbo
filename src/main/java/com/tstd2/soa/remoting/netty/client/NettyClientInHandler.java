@@ -11,11 +11,11 @@ public class NettyClientInHandler extends ChannelInboundHandlerAdapter {
         // 读取远程服务端信息包
         Response response = (Response) msg;
 
-        String serviceId = response.getSessionId();
+        String sessionId = response.getSessionId();
 
-        CallBack callBack = CallBackHolder.get(serviceId);
+        CallBack callBack = CallBackHolder.get(sessionId);
         if (callBack != null) {
-            CallBackHolder.remove(serviceId);
+            CallBackHolder.remove(sessionId);
             callBack.over(response);
         }
     }
