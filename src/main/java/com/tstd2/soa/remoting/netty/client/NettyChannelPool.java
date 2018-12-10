@@ -25,6 +25,7 @@ public class NettyChannelPool {
 
     /**
      * 默认为每一个ip端口建议一个长连接
+     * 单个长连接不适合大对象传输
      */
     private Map<String, Channel[]> channelMap = new ConcurrentHashMap<>();
 
@@ -49,7 +50,7 @@ public class NettyChannelPool {
         }
 
         // 随机取出一个链接
-        int index = new Random().nextInt(connections);
+        int index = connections == 1 ? 0 : new Random().nextInt(connections);
         Channel channel = channels[index];
 
         // 如果能获取到,直接返回
