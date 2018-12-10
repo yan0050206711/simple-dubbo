@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ServiceExecutor {
 
-    private static ExecutorService threadPool;
+    private volatile static ExecutorService threadPool;
 
     private static final AtomicInteger mThreadNum = new AtomicInteger(1);
 
