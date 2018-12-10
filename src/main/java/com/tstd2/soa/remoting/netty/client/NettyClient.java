@@ -18,7 +18,7 @@ public class NettyClient {
      * 通过netty发送消息
      */
     public static Object sendMsg(NodeInfo nodeInfo, Invocation invocation) throws Exception {
-        Request request = new Request();
+        final Request request = new Request();
         request.setSessionId(UUID.randomUUID().toString());
         request.setClassName(invocation.getReference().getInf());
         request.setMethodName(invocation.getMethod().getName());
@@ -29,7 +29,12 @@ public class NettyClient {
         CallBack callBack = new CallBack();
         CallBackHolder.put(request.getSessionId(), callBack);
         Channel channel = nettyChannelPool.syncGetChannel(nodeInfo.getHost(), Integer.parseInt(nodeInfo.getPort()));
-        channel.writeAndFlush(request);
+        channel.writeAndFlush(request).addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                // System.out.println("RPC Client Send request sessionId:" + request.getSessionId());
+            }
+        });
 
         int timeout = Integer.parseInt(invocation.getReference().getTimeout());
         return callBack.start(timeout);

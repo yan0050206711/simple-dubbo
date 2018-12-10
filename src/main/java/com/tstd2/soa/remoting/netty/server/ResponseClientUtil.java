@@ -31,7 +31,7 @@ public class ResponseClientUtil {
         ctx.writeAndFlush(response).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                System.out.println("RPC Server Send response sessionId:" + request.getSessionId());
+//                System.out.println("RPC Server Send response sessionId:" + request.getSessionId());
             }
         });
         return true;
