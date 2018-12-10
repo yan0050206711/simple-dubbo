@@ -40,7 +40,6 @@ public class ResponseClientUtil {
     private static Object reflect(Request request) throws Exception {
         // 从spring服务实例对象
         ApplicationContext application = Service.getApplicationContext();
-        // TODO java反射性能较差，利用缓存提高
         Class<?> clazz = Class.forName(request.getClassName());
         Object serviceBean = application.getBean(clazz);
 
