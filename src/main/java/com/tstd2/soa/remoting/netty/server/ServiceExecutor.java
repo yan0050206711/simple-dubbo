@@ -36,7 +36,7 @@ public class ServiceExecutor {
 
     private static ThreadPoolExecutor initThreadPool(int threads) {
         int availProcessors = Runtime.getRuntime().availableProcessors() * 2;
-        int corePoolSize = threads > availProcessors ? threads : availProcessors * 2;
+        int corePoolSize = threads > availProcessors ? threads : availProcessors;
         return new ThreadPoolExecutor(corePoolSize, threads, 0, TimeUnit.MILLISECONDS,
                 new SynchronousQueue<Runnable>(), new ThreadFactory() {
             @Override
