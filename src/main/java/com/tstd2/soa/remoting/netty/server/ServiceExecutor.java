@@ -35,13 +35,13 @@ public class ServiceExecutor {
     }
 
     private static ThreadPoolExecutor initThreadPool(int threads) {
-        int availProcessors = Runtime.getRuntime().availableProcessors();
-        int corePoolSize = threads >= availProcessors ? availProcessors : threads;
+        int availProcessors = Runtime.getRuntime().availableProcessors() * 2;
+        int corePoolSize = threads > availProcessors ? threads : availProcessors * 2;
         return new ThreadPoolExecutor(corePoolSize, threads, 0, TimeUnit.MILLISECONDS,
                 new SynchronousQueue<Runnable>(), new ThreadFactory() {
             @Override
             public Thread newThread(Runnable runnable) {
-                Thread ret = new Thread(runnable, "SimpleDubbo-thread-" + mThreadNum);
+                Thread ret = new Thread(runnable, "SimpleDubbo-thread-" + mThreadNum.incrementAndGet());
                 ret.setDaemon(true);
                 return ret;
             }
