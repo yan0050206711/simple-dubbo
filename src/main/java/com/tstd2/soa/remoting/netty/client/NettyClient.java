@@ -1,11 +1,14 @@
 package com.tstd2.soa.remoting.netty.client;
 
-import com.tstd2.soa.rpc.invoke.Invocation;
+import com.tstd2.soa.remoting.netty.serialize.RpcSerializeFrame;
 import com.tstd2.soa.rpc.loadbalance.NodeInfo;
-import com.tstd2.soa.remoting.netty.model.Request;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
-
-import java.util.UUID;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 
 public class NettyClient {
 
@@ -15,30 +18,57 @@ public class NettyClient {
     private static final NettyChannelPool nettyChannelPool = new NettyChannelPool();
 
     /**
-     * 通过netty发送消息
+     * 利用管道发送消息
      */
-    public static Object sendMsg(NodeInfo nodeInfo, Invocation invocation) throws Exception {
-        final Request request = new Request();
-        request.setSessionId(UUID.randomUUID().toString());
-        request.setClassName(invocation.getReference().getInf());
-        request.setMethodName(invocation.getMethod().getName());
-        request.setParametersType(invocation.getMethod().getParameterTypes());
-        request.setParametersValue(invocation.getObjs());
+    public static void writeAndFlush(NodeInfo nodeInfo, Object request) throws Exception {
+        Channel channel = nettyChannelPool.syncGetChannel(nodeInfo, new NettyChannelPool.ConnectCall() {
 
-        // 通过netty传输管道直接拿到响应结果
-        CallBack callBack = new CallBack();
-        CallBackHolder.put(request.getSessionId(), callBack);
-        Channel channel = nettyChannelPool.syncGetChannel(nodeInfo);
+            @Override
+            public Channel connect(NodeInfo nodeInfo) throws Exception {
+                return connectToServer(nodeInfo);
+            }
+        });
+
         channel.writeAndFlush(request).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
                 // System.out.println("RPC Client Send request sessionId:" + request.getSessionId());
             }
         });
+    }
 
-        int timeout = Integer.parseInt(invocation.getReference().getTimeout());
-        return callBack.start(timeout);
+    /**
+     * 连接服务端
+     */
+    private static Channel connectToServer(final NodeInfo nodeInfo) throws InterruptedException {
+        // 异步调用
+        // 基于NIO的非阻塞实现并行调用，客户端不需要启动多线程即可完成并行调用多个远程服务，相对多线程开销较小
+        // 构建RpcProxyHandler异步处理响应的Handler
+        final NettyClientInHandler nettyClientInHandler = new NettyClientInHandler();
 
+        // netty
+        EventLoopGroup group = new NioEventLoopGroup();
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap.group(group)
+                .channel(NioSocketChannel.class)
+                .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.TCP_NODELAY, true)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
+                        pipeline.addLast(new LengthFieldPrepender(4));
+                        RpcSerializeFrame.select(nodeInfo.getSerialize(), pipeline);
+                        pipeline.addLast(nettyClientInHandler);
+
+                    }
+                });
+
+        ChannelFuture future = bootstrap.connect(nodeInfo.getHost(), Integer.parseInt(nodeInfo.getPort()));
+        Channel channel = future.sync().channel();
+
+        return channel;
     }
 
 }

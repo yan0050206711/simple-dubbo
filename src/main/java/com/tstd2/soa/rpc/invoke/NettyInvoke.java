@@ -3,7 +3,7 @@ package com.tstd2.soa.rpc.invoke;
 import com.tstd2.soa.config.Reference;
 import com.tstd2.soa.rpc.loadbalance.LoadBalance;
 import com.tstd2.soa.rpc.loadbalance.NodeInfo;
-import com.tstd2.soa.remoting.netty.client.NettyClient;
+import com.tstd2.soa.remoting.netty.client.MessageSender;
 import com.tstd2.soa.registry.RegistryNode;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class NettyInvoke implements Invoke {
         // 通过负载均衡策略选择一个节点
         NodeInfo nodeInfo = loadBalanceBean.deSelect(registryInfo);
 
-        return NettyClient.sendMsg(nodeInfo, invocation);
+        return MessageSender.send(nodeInfo, invocation);
     }
 
 }

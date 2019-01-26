@@ -9,12 +9,12 @@
 
     <soa:registry protocol="redis" address="127.0.0.1:6380" />
 
-    <soa:protocol port="9000" threads="10" />
+    <soa:protocol port="9000" threads="20" serialize="hession2" />
 
     <bean id="calcService" class="com.tstd2.soa.test.service.CalcServiceImpl" />
-    <soa:service interface="com.tstd2.soa.test.service.CalcService" ref="calcService" timeout="1000" />
+    <soa:service interface="com.tstd2.soa.test.service.CalcService" ref="calcService" timeout="100000" />
 
     <bean id="userService" class="com.tstd2.soa.test.service.UserServiceImpl" />
-    <soa:service interface="com.tstd2.soa.test.service.UserService" ref="userService" timeout="1000" />
+    <soa:service interface="com.tstd2.soa.test.service.UserService" ref="userService" timeout="100000" />
 
 </beans>

@@ -10,7 +10,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +27,7 @@ public class NettyChannelPool {
     /**
      * 同步获取netty channel
      */
-    public Channel syncGetChannel(NodeInfo nodeInfo) throws InterruptedException {
+    public Channel syncGetChannel(NodeInfo nodeInfo, ConnectCall call) throws Exception {
 
         // 取出对应ip port的channel
         String host = nodeInfo.getHost() + ":" + nodeInfo.getPort();
@@ -57,7 +56,7 @@ public class NettyChannelPool {
                 return channel;
             }
             // 开始跟服务端交互，获取channel
-            channel = connectToServer(nodeInfo);
+            channel = call.connect(nodeInfo);
 
             channelMap.get(host)[index] = channel;
         }
@@ -65,34 +64,8 @@ public class NettyChannelPool {
         return channel;
     }
 
-    private Channel connectToServer(final NodeInfo nodeInfo) throws InterruptedException {
-        // 异步调用
-        // 基于NIO的非阻塞实现并行调用，客户端不需要启动多线程即可完成并行调用多个远程服务，相对多线程开销较小
-        // 构建RpcProxyHandler异步处理响应的Handler
-        final NettyClientInHandler nettyClientInHandler = new NettyClientInHandler();
-
-        // netty
-        EventLoopGroup group = new NioEventLoopGroup();
-        Bootstrap bootstrap = new Bootstrap();
-        bootstrap.group(group)
-                .channel(NioSocketChannel.class)
-                .option(ChannelOption.SO_KEEPALIVE, true)
-                .option(ChannelOption.TCP_NODELAY, true)
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
-                        pipeline.addLast(new LengthFieldPrepender(4));
-                        RpcSerializeFrame.select(nodeInfo.getSerialize(), pipeline);
-                        pipeline.addLast(nettyClientInHandler);
-
-                    }
-                });
-
-        ChannelFuture future = bootstrap.connect(nodeInfo.getHost(), Integer.parseInt(nodeInfo.getPort()));
-        Channel channel = future.sync().channel();
-
-        return channel;
+    public interface ConnectCall {
+        Channel connect(NodeInfo nodeInfo) throws Exception;
     }
+
 }
