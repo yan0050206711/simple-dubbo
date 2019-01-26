@@ -49,6 +49,7 @@ public class NettyChannelPool {
 
         synchronized (host.intern()) {
             // 这里必须再次做判断,当锁被释放后，之前等待的线程已经可以直接拿到结果了。
+            channel = channelMap.get(host)[index];
             if (channel != null && channel.isActive()) {
                 return channel;
             }

@@ -26,7 +26,7 @@ public class NettyClient {
         if (nettyChannelPool == null) {
             synchronized (NettyClient.class) {
                 if (nettyChannelPool == null) {
-                    nettyChannelPool = new NettyChannelPool(1);
+                    nettyChannelPool = new NettyChannelPool(2);
                 }
             }
         }
