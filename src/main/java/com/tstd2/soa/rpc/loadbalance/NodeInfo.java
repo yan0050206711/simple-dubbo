@@ -5,6 +5,7 @@ public class NodeInfo {
     private String host;
     private String port;
     private String contextpath;
+    private String serialize;
 
     public String getHost() {
         return host;
@@ -28,5 +29,13 @@ public class NodeInfo {
 
     public void setContextpath(String contextpath) {
         this.contextpath = contextpath;
+    }
+
+    public String getSerialize() {
+        return serialize;
+    }
+
+    public void setSerialize(String serialize) {
+        this.serialize = serialize;
     }
 }

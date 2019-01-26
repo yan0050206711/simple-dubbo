@@ -26,6 +26,7 @@
             <xsd:attribute name="host" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="contextpath" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="threads" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="serialize" type="xsd:string"></xsd:attribute>
         </xsd:complexType>
     </xsd:element>
     <xsd:element name="service">

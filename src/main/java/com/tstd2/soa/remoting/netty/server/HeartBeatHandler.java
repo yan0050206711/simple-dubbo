@@ -16,7 +16,7 @@ public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
             IdleStateEvent event = (IdleStateEvent) obj;
             if (IdleState.ALL_IDLE.equals(event.state())) {
                 System.out.println("已经10秒没有接收到客户端的信息了，关闭这个链接");
-                ctx.writeAndFlush("heart");
+                // ctx.writeAndFlush("heart");
                 ctx.channel().close();
             }
         } else {

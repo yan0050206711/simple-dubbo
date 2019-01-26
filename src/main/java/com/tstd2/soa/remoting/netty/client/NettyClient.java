@@ -28,7 +28,7 @@ public class NettyClient {
         // 通过netty传输管道直接拿到响应结果
         CallBack callBack = new CallBack();
         CallBackHolder.put(request.getSessionId(), callBack);
-        Channel channel = nettyChannelPool.syncGetChannel(nodeInfo.getHost(), Integer.parseInt(nodeInfo.getPort()));
+        Channel channel = nettyChannelPool.syncGetChannel(nodeInfo);
         channel.writeAndFlush(request).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {

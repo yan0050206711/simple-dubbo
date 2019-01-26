@@ -1,21 +1,16 @@
 package com.tstd2.soa.remoting.netty.client;
 
+import com.tstd2.soa.remoting.netty.serialize.RpcSerializeFrame;
+import com.tstd2.soa.rpc.loadbalance.NodeInfo;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,45 +21,43 @@ public class NettyChannelPool {
      * 默认为每一个ip端口建议一个长连接
      * 单个长连接不适合大对象传输
      */
-    private Map<String, Channel[]> channelMap = new ConcurrentHashMap<>();
+    private volatile Map<String, Channel[]> channelMap = new ConcurrentHashMap<>();
 
     private int connections = 1;
 
     /**
      * 同步获取netty channel
      */
-    public Channel syncGetChannel(String ip, int port) throws InterruptedException {
+    public Channel syncGetChannel(NodeInfo nodeInfo) throws InterruptedException {
 
         // 取出对应ip port的channel
-        String host = ip + ":" + port;
+        String host = nodeInfo.getHost() + ":" + nodeInfo.getPort();
         Channel[] channels = channelMap.get(host);
 
         if (channels == null) {
-            synchronized (host) {
+            synchronized (host.intern()) {
                 if (channelMap.get(host) == null) {
-                    channels = new Channel[connections];
-                    channelMap.put(host, channels);
+                    channelMap.put(host, new Channel[connections]);
                 }
             }
         }
 
         // 随机取出一个链接
         int index = connections == 1 ? 0 : new Random().nextInt(connections);
-        Channel channel = channels[index];
+        Channel channel = channelMap.get(host)[index];
 
         // 如果能获取到,直接返回
         if (channel != null && channel.isActive()) {
             return channel;
         }
 
-        synchronized (host) {
+        synchronized (host.intern()) {
             // 这里必须再次做判断,当锁被释放后，之前等待的线程已经可以直接拿到结果了。
             if (channel != null && channel.isActive()) {
                 return channel;
             }
-
             // 开始跟服务端交互，获取channel
-            channel = connectToServer(ip, port);
+            channel = connectToServer(nodeInfo);
 
             channelMap.get(host)[index] = channel;
         }
@@ -72,7 +65,7 @@ public class NettyChannelPool {
         return channel;
     }
 
-    private Channel connectToServer(String ip, int port) throws InterruptedException {
+    private Channel connectToServer(final NodeInfo nodeInfo) throws InterruptedException {
         // 异步调用
         // 基于NIO的非阻塞实现并行调用，客户端不需要启动多线程即可完成并行调用多个远程服务，相对多线程开销较小
         // 构建RpcProxyHandler异步处理响应的Handler
@@ -91,14 +84,13 @@ public class NettyChannelPool {
                         ChannelPipeline pipeline = ch.pipeline();
                         pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
                         pipeline.addLast(new LengthFieldPrepender(4));
-                        pipeline.addLast("encoder", new ObjectEncoder());
-                        pipeline.addLast("decoder", new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
+                        RpcSerializeFrame.select(nodeInfo.getSerialize(), pipeline);
                         pipeline.addLast(nettyClientInHandler);
 
                     }
                 });
 
-        ChannelFuture future = bootstrap.connect(ip, port);
+        ChannelFuture future = bootstrap.connect(nodeInfo.getHost(), Integer.parseInt(nodeInfo.getPort()));
         Channel channel = future.sync().channel();
 
         return channel;

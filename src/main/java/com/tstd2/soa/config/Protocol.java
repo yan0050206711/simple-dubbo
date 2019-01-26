@@ -20,6 +20,7 @@ public class Protocol extends BaseConfigBean implements InitializingBean, Applic
     private String host;
     private String contextpath;
     private String threads;
+    private String serialize;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -69,6 +70,14 @@ public class Protocol extends BaseConfigBean implements InitializingBean, Applic
         this.contextpath = contextpath;
     }
 
+    public String getSerialize() {
+        return serialize;
+    }
+
+    public void setSerialize(String serialize) {
+        this.serialize = serialize;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
 
@@ -89,12 +98,14 @@ public class Protocol extends BaseConfigBean implements InitializingBean, Applic
             return;
         }
 
+        final Protocol protocol = this;
+
         if ("netty".equals(name)) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        NettyServer.start(port);
+                        NettyServer.start(protocol);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

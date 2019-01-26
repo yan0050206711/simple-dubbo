@@ -1,5 +1,7 @@
 package com.tstd2.soa.remoting.netty.server;
 
+import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.remoting.netty.serialize.RpcSerializeFrame;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -7,9 +9,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -21,7 +20,7 @@ public class NettyServer {
     /**
      * 启动netty服务
      */
-    public static void start(String port) throws Exception {
+    public static void start(final Protocol protocol) throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
         try {
@@ -38,15 +37,14 @@ public class NettyServer {
                             pipeline.addLast(new IdleStateHandler(5, 5, 10, TimeUnit.SECONDS));
                             pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
                             pipeline.addLast(new LengthFieldPrepender(4));
-                            pipeline.addLast("encoder", new ObjectEncoder());
-                            pipeline.addLast("decoder", new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
+                            RpcSerializeFrame.select(protocol.getSerialize(), pipeline);
                             pipeline.addLast(new NettyServerInHandler());
                             pipeline.addLast(new HeartBeatHandler());
                         }
                     });
 
-            ChannelFuture future = bootstrap.bind(Integer.parseInt(port)).sync();
-            System.out.println("RPC provider server is listen at " + port);
+            ChannelFuture future = bootstrap.bind(Integer.parseInt(protocol.getPort())).sync();
+            System.out.println("RPC provider server is listen at " + protocol.getPort());
             future.channel().closeFuture().sync();
         } catch (Exception e) {
             e.printStackTrace();

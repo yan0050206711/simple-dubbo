@@ -30,6 +30,7 @@ public class ProtocolBeanDefinitionParse implements BeanDefinitionParser {
         String host = element.getAttribute("host");
         String contextpath = element.getAttribute("contextpath");
         String threads = element.getAttribute("threads");
+        String serialize = element.getAttribute("serialize");
 
         if (StringUtils.isBlank(name)) {
             name = "netty";
@@ -44,7 +45,7 @@ public class ProtocolBeanDefinitionParse implements BeanDefinitionParser {
         }
 
         if (StringUtils.isBlank(port)) {
-            throw new RuntimeException("Protocol port is null");
+            port = "9999";
         }
 
         /**
@@ -59,6 +60,7 @@ public class ProtocolBeanDefinitionParse implements BeanDefinitionParser {
         beanDefinition.getPropertyValues().addPropertyValue("host", host);
         beanDefinition.getPropertyValues().addPropertyValue("contextpath", contextpath);
         beanDefinition.getPropertyValues().addPropertyValue("threads", threads);
+        beanDefinition.getPropertyValues().addPropertyValue("serialize", serialize);
         parserContext.getRegistry().registerBeanDefinition("Protocol-" + name, beanDefinition);
 
         return beanDefinition;

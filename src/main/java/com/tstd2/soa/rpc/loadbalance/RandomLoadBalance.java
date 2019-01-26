@@ -22,6 +22,7 @@ public class RandomLoadBalance implements LoadBalance {
         nodeInfo.setHost(protocol.getHost());
         nodeInfo.setPort(protocol.getPort());
         nodeInfo.setContextpath(protocol.getContextpath());
+        nodeInfo.setSerialize(protocol.getSerialize());
 
         return nodeInfo;
     }
