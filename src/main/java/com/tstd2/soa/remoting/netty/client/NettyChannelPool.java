@@ -1,14 +1,7 @@
 package com.tstd2.soa.remoting.netty.client;
 
-import com.tstd2.soa.remoting.netty.serialize.RpcSerializeFrame;
 import com.tstd2.soa.rpc.loadbalance.NodeInfo;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.channel.Channel;
 
 import java.util.Map;
 import java.util.Random;
@@ -22,7 +15,11 @@ public class NettyChannelPool {
      */
     private volatile Map<String, Channel[]> channelMap = new ConcurrentHashMap<>();
 
-    private int connections = 1;
+    private int connections;
+
+    public NettyChannelPool(int connections) {
+        this.connections = connections;
+    }
 
     /**
      * 同步获取netty channel

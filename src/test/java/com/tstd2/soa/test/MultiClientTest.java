@@ -1,6 +1,7 @@
 package com.tstd2.soa.test;
 
 import com.tstd2.soa.test.service.CalcService;
+import com.tstd2.soa.test.service.UserService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -13,7 +14,7 @@ public class MultiClientTest {
 
         final CalcService calc = applicationContext.getBean(CalcService.class);
 
-        ExecutorService threadPool = Executors.newFixedThreadPool(20);
+        ExecutorService threadPool = Executors.newFixedThreadPool(100);
         CompletionService<Integer> completionService = new ExecutorCompletionService<>(threadPool);
 
         long start = System.currentTimeMillis();

@@ -1,5 +1,6 @@
 package com.tstd2.soa.remoting.netty.client;
 
+import com.tstd2.soa.remoting.netty.MessageCodecConstant;
 import com.tstd2.soa.remoting.netty.serialize.RpcSerializeFrame;
 import com.tstd2.soa.rpc.loadbalance.NodeInfo;
 import io.netty.bootstrap.Bootstrap;
@@ -15,12 +16,21 @@ public class NettyClient {
     /**
      * netty channel池
      */
-    private static final NettyChannelPool nettyChannelPool = new NettyChannelPool();
+    private volatile static NettyChannelPool nettyChannelPool;
 
     /**
      * 利用管道发送消息
      */
     public static void writeAndFlush(NodeInfo nodeInfo, Object request) throws Exception {
+
+        if (nettyChannelPool == null) {
+            synchronized (NettyClient.class) {
+                if (nettyChannelPool == null) {
+                    nettyChannelPool = new NettyChannelPool(1);
+                }
+            }
+        }
+
         Channel channel = nettyChannelPool.syncGetChannel(nodeInfo, new NettyChannelPool.ConnectCall() {
 
             @Override
@@ -57,8 +67,8 @@ public class NettyClient {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
-                        pipeline.addLast(new LengthFieldPrepender(4));
+                        pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, MessageCodecConstant.MESSAGE_LENGTH, 0, MessageCodecConstant.MESSAGE_LENGTH));
+                        pipeline.addLast(new LengthFieldPrepender(MessageCodecConstant.MESSAGE_LENGTH));
                         RpcSerializeFrame.select(nodeInfo.getSerialize(), pipeline);
                         pipeline.addLast(nettyClientInHandler);
 

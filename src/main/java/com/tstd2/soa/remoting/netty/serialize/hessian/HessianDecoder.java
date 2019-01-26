@@ -2,6 +2,7 @@ package com.tstd2.soa.remoting.netty.serialize.hessian;
 
 
 import com.tstd2.soa.common.serialize.hessian.HessianCodecUtil;
+import com.tstd2.soa.remoting.netty.MessageCodecConstant;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -19,7 +20,7 @@ public class HessianDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         // 出现粘包导致消息头长度不对，直接返回
-        if (in.readableBytes() < 4) {
+        if (in.readableBytes() < MessageCodecConstant.MESSAGE_LENGTH) {
             return;
         }
 
