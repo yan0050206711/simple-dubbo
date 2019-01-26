@@ -1,6 +1,7 @@
 package com.tstd2.soa.config;
 
 import com.tstd2.soa.registry.BaseRegistryDelegate;
+import com.tstd2.soa.registry.RegistryLocalCache;
 import com.tstd2.soa.registry.RegistryNode;
 import com.tstd2.soa.rpc.cluster.Cluster;
 import com.tstd2.soa.rpc.cluster.FailfastClusterInvoke;
@@ -58,11 +59,6 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
      * 集群容错策略
      */
     private static Map<String, Cluster> clusters = new HashMap<>();
-
-    /**
-     * 生产者的多个服务的列表
-     */
-    private List<RegistryNode> registryInfo = new ArrayList<>();
 
     static {
         invokes.put("netty", new NettyInvoke());
@@ -164,14 +160,6 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         this.timeout = timeout;
     }
 
-    public List<RegistryNode> getRegistryInfo() {
-        return registryInfo;
-    }
-
-    public void setRegistryInfo(List<RegistryNode> registryInfo) {
-        this.registryInfo = registryInfo;
-    }
-
     /**
      * 返回一个交由Spring管理的实例，可以从Spring上下文拿到这个实例
      */
@@ -216,7 +204,8 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        registryInfo = BaseRegistryDelegate.getRegistry(inf, applicationContext);
+        List<RegistryNode> registryInfo = BaseRegistryDelegate.getRegistry(inf, applicationContext);
+        RegistryLocalCache.setRegistry(inf, registryInfo);
     }
 
     @Override
