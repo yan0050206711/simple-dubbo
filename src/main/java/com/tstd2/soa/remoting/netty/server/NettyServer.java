@@ -1,6 +1,7 @@
 package com.tstd2.soa.remoting.netty.server;
 
 import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.remoting.netty.MessageCodecConstant;
 import com.tstd2.soa.remoting.netty.serialize.RpcSerializeFrame;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -35,8 +36,8 @@ public class NettyServer {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
                             pipeline.addLast(new IdleStateHandler(5, 5, 10, TimeUnit.SECONDS));
-                            pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
-                            pipeline.addLast(new LengthFieldPrepender(4));
+                            pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, MessageCodecConstant.MESSAGE_LENGTH, 0, MessageCodecConstant.MESSAGE_LENGTH));
+                            pipeline.addLast(new LengthFieldPrepender(MessageCodecConstant.MESSAGE_LENGTH));
                             RpcSerializeFrame.select(protocol.getSerialize(), pipeline);
                             pipeline.addLast(new NettyServerInHandler());
                             pipeline.addLast(new HeartBeatHandler());
