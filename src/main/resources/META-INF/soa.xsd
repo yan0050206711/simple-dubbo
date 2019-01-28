@@ -17,6 +17,7 @@
             <xsd:attribute name="cluster" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="retries" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="timeout" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="proxy" type="xsd:string"></xsd:attribute>
         </xsd:complexType>
     </xsd:element>
     <xsd:element name="protocol">

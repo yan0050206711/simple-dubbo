@@ -31,6 +31,7 @@ public class ReferenceBeanDefinitionParse implements BeanDefinitionParser {
         String cluster = element.getAttribute("cluster");
         String retries = element.getAttribute("retries");
         String timeout = element.getAttribute("timeout");
+        String proxy = element.getAttribute("proxy");
 
         if (StringUtils.isBlank(id)) {
             throw new RuntimeException("Reference id is null");
@@ -62,6 +63,12 @@ public class ReferenceBeanDefinitionParse implements BeanDefinitionParser {
         if (StringUtils.isBlank(timeout)) {
             timeout = "5000";
         }
+        /**
+         * 默认javassist
+         */
+        if (StringUtils.isBlank(proxy)) {
+            proxy = "javassist";
+        }
 
         beanDefinition.getPropertyValues().addPropertyValue("id", id);
         beanDefinition.getPropertyValues().addPropertyValue("inf", inf);
@@ -70,6 +77,7 @@ public class ReferenceBeanDefinitionParse implements BeanDefinitionParser {
         beanDefinition.getPropertyValues().addPropertyValue("cluster", cluster);
         beanDefinition.getPropertyValues().addPropertyValue("retries", retries);
         beanDefinition.getPropertyValues().addPropertyValue("timeout", timeout);
+        beanDefinition.getPropertyValues().addPropertyValue("proxy", proxy);
         parserContext.getRegistry().registerBeanDefinition("Reference-" + id, beanDefinition);
 
         return beanDefinition;

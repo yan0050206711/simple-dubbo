@@ -1,5 +1,6 @@
 package com.tstd2.soa.remoting.netty.server;
 
+import com.tstd2.soa.common.ClassLocalCache;
 import com.tstd2.soa.config.Service;
 import com.tstd2.soa.remoting.netty.ErrorCode;
 import com.tstd2.soa.remoting.netty.model.Request;
@@ -40,7 +41,7 @@ public class ResponseClientUtil {
     private static Object reflect(Request request) throws Exception {
         // 从spring服务实例对象
         ApplicationContext application = Service.getApplicationContext();
-        Class<?> clazz = Class.forName(request.getClassName());
+        Class<?> clazz = ClassLocalCache.putAndGet(request.getClassName());
         Object serviceBean = application.getBean(clazz);
 
         // 代理对象里面方法名称和方法参数

@@ -13,6 +13,7 @@ import com.tstd2.soa.rpc.loadbalance.LoadBalance;
 import com.tstd2.soa.rpc.loadbalance.RandomLoadBalance;
 import com.tstd2.soa.rpc.loadbalance.RoundrobLoadBalance;
 import com.tstd2.soa.rpc.proxy.RpcProxy;
+import com.tstd2.soa.rpc.proxy.javassist.JavassistProxy;
 import com.tstd2.soa.rpc.proxy.jdk.JdkProxy;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
@@ -43,6 +44,8 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
 
     private String timeout;
 
+    private String proxy;
+
     private static ApplicationContext applicationContext;
 
     /**
@@ -60,6 +63,11 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
      */
     private static Map<String, Cluster> clusters = new HashMap<>();
 
+    /**
+     * 动态代理接口
+     */
+    private static Map<String, RpcProxy> proxys = new HashMap<>();
+
     static {
         invokes.put("netty", new NettyInvoke());
 //        invokes.put("mina", new MineInvoke());
@@ -70,6 +78,9 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         clusters.put("failover", new FailoverClusterInvoke());
         clusters.put("failfast", new FailfastClusterInvoke());
         clusters.put("failsafe", new FailsafeClusterInvoke());
+
+        proxys.put("javassist", new JavassistProxy());
+        proxys.put("jdk", new JdkProxy());
     }
 
     public String getId() {
@@ -118,6 +129,14 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
 
     public void setRetries(String retries) {
         this.retries = retries;
+    }
+
+    public String getProxy() {
+        return proxy;
+    }
+
+    public void setProxy(String proxy) {
+        this.proxy = proxy;
     }
 
     public static ApplicationContext getApplicationContext() {
@@ -178,8 +197,7 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         }
 
         // 生成一个代理对象
-        RpcProxy proxy = new JdkProxy();
-        return proxy.getObject(inf, invoke, this);
+        return proxys.get(proxy).getObject(inf, invoke, this);
     }
 
     /**
