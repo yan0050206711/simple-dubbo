@@ -74,7 +74,6 @@ public class ServiceExecutor {
                     threadName, e.getPoolSize(), e.getActiveCount(), e.getCorePoolSize(), e.getMaximumPoolSize(), e.getLargestPoolSize(),
                     e.getTaskCount(), e.getCompletedTaskCount(), e.isShutdown(), e.isTerminated(), e.isTerminating(),
                     protocol.getName(), protocol.getHost(), protocol.getPort());
-            System.out.println(msg);
             throw new RejectedExecutionException(msg);
         }
     }
