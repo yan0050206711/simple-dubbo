@@ -1,8 +1,9 @@
 package com.tstd2.soa.remoting.netty.client;
 
+import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.registry.RegistryNode;
 import com.tstd2.soa.remoting.netty.MessageCodecConstant;
 import com.tstd2.soa.remoting.netty.serialize.RpcSerializeFrame;
-import com.tstd2.soa.rpc.loadbalance.NodeInfo;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -21,7 +22,7 @@ public class NettyClient {
     /**
      * 利用管道发送消息
      */
-    public static void writeAndFlush(NodeInfo nodeInfo, Object request) throws Exception {
+    public static void writeAndFlush(Protocol protocol, Object request) throws Exception {
 
         if (nettyChannelPool == null) {
             synchronized (NettyClient.class) {
@@ -31,11 +32,11 @@ public class NettyClient {
             }
         }
 
-        Channel channel = nettyChannelPool.syncGetChannel(nodeInfo, new NettyChannelPool.ConnectCall() {
+        Channel channel = nettyChannelPool.syncGetChannel(protocol, new NettyChannelPool.ConnectCall() {
 
             @Override
-            public Channel connect(NodeInfo nodeInfo) throws Exception {
-                return connectToServer(nodeInfo);
+            public Channel connect(Protocol protocol) throws Exception {
+                return connectToServer(protocol);
             }
         });
 
@@ -50,7 +51,7 @@ public class NettyClient {
     /**
      * 连接服务端
      */
-    private static Channel connectToServer(final NodeInfo nodeInfo) throws InterruptedException {
+    private static Channel connectToServer(final Protocol protocol) throws InterruptedException {
         // 异步调用
         // 基于NIO的非阻塞实现并行调用，客户端不需要启动多线程即可完成并行调用多个远程服务，相对多线程开销较小
         // 构建RpcProxyHandler异步处理响应的Handler
@@ -69,13 +70,13 @@ public class NettyClient {
                         ChannelPipeline pipeline = ch.pipeline();
                         pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, MessageCodecConstant.MESSAGE_LENGTH, 0, MessageCodecConstant.MESSAGE_LENGTH));
                         pipeline.addLast(new LengthFieldPrepender(MessageCodecConstant.MESSAGE_LENGTH));
-                        RpcSerializeFrame.select(nodeInfo.getSerialize(), pipeline);
+                        RpcSerializeFrame.select(protocol.getSerialize(), pipeline);
                         pipeline.addLast(nettyClientInHandler);
 
                     }
                 });
 
-        ChannelFuture future = bootstrap.connect(nodeInfo.getHost(), Integer.parseInt(nodeInfo.getPort()));
+        ChannelFuture future = bootstrap.connect(protocol.getHost(), Integer.parseInt(protocol.getPort()));
         Channel channel = future.sync().channel();
 
         return channel;

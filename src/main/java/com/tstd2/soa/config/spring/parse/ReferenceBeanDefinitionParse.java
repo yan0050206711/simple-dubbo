@@ -58,12 +58,6 @@ public class ReferenceBeanDefinitionParse implements BeanDefinitionParser {
             retries = "1";
         }
         /**
-         * 默认5s
-         */
-        if (StringUtils.isBlank(timeout)) {
-            timeout = "5000";
-        }
-        /**
          * 默认javassist
          */
         if (StringUtils.isBlank(proxy)) {

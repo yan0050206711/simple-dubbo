@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 
 public class ResponseClientUtil {
 
-    public static boolean response(final Request request, Response response, ChannelHandlerContext ctx) {
+    public static boolean response(Request request, Response response, ChannelHandlerContext ctx) {
         // 取出request对应sessionId
         response.setSessionId(request.getSessionId());
 

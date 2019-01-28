@@ -13,10 +13,10 @@ public class NettyClientInHandler extends ChannelInboundHandlerAdapter {
 
         String sessionId = response.getSessionId();
 
-        CallBack callBack = CallBackHolder.get(sessionId);
-        if (callBack != null) {
-            CallBackHolder.remove(sessionId);
-            callBack.over(response);
+        ResponseFuture future = ResponseHolder.get(sessionId);
+        if (future != null) {
+            ResponseHolder.remove(sessionId);
+            future.over(response);
         }
     }
 

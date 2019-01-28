@@ -20,14 +20,11 @@ public class NettyServerInHandler extends ChannelInboundHandlerAdapter {
         ApplicationContext application = Protocol.getApplicationContext();
         // 拿到服务端协议配置
         Protocol protocol = application.getBean(Protocol.class);
-        // 拿到当前要执行的Service配置
-        Service service = application.getBean("Service-" + request.getClassName(), Service.class);
 
         int threads = Integer.parseInt(protocol.getThreads());
-        int timeout = Integer.parseInt(service.getTimeout());
 
         // 不阻塞nio线程，复杂的业务逻辑丢给专门的业务线程池
         // 复用work线程池？ctx.executor()
-        ServiceExecutor.submit(new ServiceTask(request, response, ctx), threads, timeout);
+        ServiceExecutor.submit(new ServiceTask(request, response, ctx), threads, protocol);
     }
 }

@@ -14,12 +14,12 @@ public class MultiClientTest {
 
         final CalcService calc = applicationContext.getBean(CalcService.class);
 
-        ExecutorService threadPool = Executors.newFixedThreadPool(100);
+        ExecutorService threadPool = Executors.newFixedThreadPool(200);
         CompletionService<Integer> completionService = new ExecutorCompletionService<>(threadPool);
 
         long start = System.currentTimeMillis();
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             final int x = i;
             completionService.submit(new Callable<Integer>() {
 
@@ -31,7 +31,7 @@ public class MultiClientTest {
 
         }
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             try {
                 completionService.take().get();
             } catch (InterruptedException e) {

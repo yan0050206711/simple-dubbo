@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface LoadBalance {
 
-    NodeInfo deSelect(List<RegistryNode> registryInfo);
+    RegistryNode deSelect(List<RegistryNode> registryInfo);
 
 }

@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Rpc消息回调
  */
-public class CallBack {
+public class ResponseFuture {
 
     private Response response;
     private Lock lock = new ReentrantLock();

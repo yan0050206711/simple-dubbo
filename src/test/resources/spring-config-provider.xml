@@ -12,9 +12,9 @@
     <soa:protocol port="9000" threads="200" serialize="hession2" />
 
     <bean id="calcService" class="com.tstd2.soa.test.service.CalcServiceImpl" />
-    <soa:service interface="com.tstd2.soa.test.service.CalcService" ref="calcService" timeout="100000" />
+    <soa:service interface="com.tstd2.soa.test.service.CalcService" ref="calcService" timeout="1000" />
 
     <bean id="userService" class="com.tstd2.soa.test.service.UserServiceImpl" />
-    <soa:service interface="com.tstd2.soa.test.service.UserService" ref="userService" timeout="100000" />
+    <soa:service interface="com.tstd2.soa.test.service.UserService" ref="userService" timeout="1000" />
 
 </beans>

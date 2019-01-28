@@ -43,10 +43,10 @@ public class ServiceBeanDefinitionParse implements BeanDefinitionParser {
         }
 
         /**
-         * 默认3s
+         * 默认1s
          */
         if (StringUtils.isBlank(timeout)) {
-            timeout = "3000";
+            timeout = "1000";
         }
 
         beanDefinition.getPropertyValues().addPropertyValue("inf", inf);

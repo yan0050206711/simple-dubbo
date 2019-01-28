@@ -1,6 +1,6 @@
 package com.tstd2.soa.remoting.netty.client;
 
-import com.tstd2.soa.rpc.loadbalance.NodeInfo;
+import com.tstd2.soa.config.Protocol;
 import io.netty.channel.Channel;
 
 import java.util.Map;
@@ -24,10 +24,10 @@ public class NettyChannelPool {
     /**
      * 同步获取netty channel
      */
-    public Channel syncGetChannel(NodeInfo nodeInfo, ConnectCall call) throws Exception {
+    public Channel syncGetChannel(Protocol protocol, ConnectCall call) throws Exception {
 
         // 取出对应ip port的channel
-        String host = nodeInfo.getHost() + ":" + nodeInfo.getPort();
+        String host = protocol.getHost() + ":" + protocol.getPort();
         Channel[] channels = channelMap.get(host);
 
         if (channels == null) {
@@ -54,7 +54,7 @@ public class NettyChannelPool {
                 return channel;
             }
             // 开始跟服务端交互，获取channel
-            channel = call.connect(nodeInfo);
+            channel = call.connect(protocol);
 
             channelMap.get(host)[index] = channel;
         }
@@ -63,7 +63,7 @@ public class NettyChannelPool {
     }
 
     public interface ConnectCall {
-        Channel connect(NodeInfo nodeInfo) throws Exception;
+        Channel connect(Protocol protocol) throws Exception;
     }
 
 }

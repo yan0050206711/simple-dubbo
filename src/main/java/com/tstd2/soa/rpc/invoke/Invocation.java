@@ -48,4 +48,5 @@ public class Invocation implements Serializable {
     public void setReference(Reference reference) {
         this.reference = reference;
     }
+
 }
