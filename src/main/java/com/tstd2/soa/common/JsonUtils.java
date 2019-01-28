@@ -2,18 +2,9 @@ package com.tstd2.soa.common;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * Json工具类。
@@ -23,48 +14,7 @@ import java.util.Set;
 public final class JsonUtils {
 
 	private static final Gson GSON = new GsonBuilder()
-	.setDateFormat("yyyy-MM-dd HH:mm:ss")//设置时间格式
-	//指定map实现类型
-	.registerTypeAdapter(Map.class, new JsonDeserializer<Map<String,Object>>() {
-		@Override
-		public Map<String, Object> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-			JsonObject jsonObject = json.getAsJsonObject();
-			//JsonObject不能为JsonArray
-			if(jsonObject.isJsonArray()){
-				throw new JsonParseException("JsonArray can't parse to Map : " + json.toString());
-			}
-			Set<Entry<String, JsonElement>> set = jsonObject.entrySet();
-			Map<String, Object> map = new HashMap<>(set.size(), 1.0f);
-			for(Entry<String, JsonElement> entry : set){
-				JsonElement valueElement = entry.getValue();
-				Object value;
-				if(valueElement.isJsonPrimitive()){
-					JsonPrimitive primitiveValue = (JsonPrimitive) valueElement;
-					if(primitiveValue.isBoolean()){
-						value = primitiveValue.getAsBoolean();
-					}else if(primitiveValue.isNumber()){
-						String stringValue = primitiveValue.getAsString();
-						try{
-							value = Long.parseLong(stringValue);
-						} catch (NumberFormatException e){
-							//其他情况做浮点数处理，这里还忽略了一个大数的情况。
-							value = primitiveValue.getAsDouble();
-						}
-					}else if(primitiveValue.isString()){
-						value = primitiveValue.getAsString();
-					}else{
-						value = primitiveValue;
-					}
-				}else if(valueElement.isJsonNull()){
-					value = null;
-				}else {
-					value = valueElement;
-				}
-				map.put(entry.getKey(), value);
-			}
-			return map;
-		}
-	})
+	.setDateFormat("yyyy-MM-dd HH:mm:ss")
 	.disableHtmlEscaping()
 	.create();
 
