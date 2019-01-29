@@ -13,8 +13,12 @@ public class RandomLoadBalance implements LoadBalance {
 
     @Override
     public RegistryNode deSelect(List<RegistryNode> registryInfo) {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        int index = random.nextInt(registryInfo.size());
+        int size = registryInfo.size();
+        int index = 0;
+        if (size > 1) {
+            ThreadLocalRandom random = ThreadLocalRandom.current();
+            index = random.nextInt(size);
+        }
         RegistryNode node = registryInfo.get(index);
 
         return node;

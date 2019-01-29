@@ -6,6 +6,7 @@ import io.netty.channel.Channel;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class NettyChannelPool {
 
@@ -39,7 +40,7 @@ public class NettyChannelPool {
         }
 
         // 随机取出一个链接
-        int index = connections == 1 ? 0 : new Random().nextInt(connections);
+        int index = connections == 1 ? 0 : ThreadLocalRandom.current().nextInt(connections);
         Channel channel = channelMap.get(host)[index];
 
         // 如果能获取到,直接返回
