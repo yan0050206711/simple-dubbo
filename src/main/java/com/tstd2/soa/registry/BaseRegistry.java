@@ -15,6 +15,12 @@ public interface BaseRegistry {
      */
     boolean registry(String interfaceName, ApplicationContext application);
 
+    void unregister(String interfaceName, ServerNode serverfNode);
+
+    void subscribe(ServerNode serverfNode, NotifyListener listener);
+
+    void unsubscribe(ServerNode serverfNode, NotifyListener listener);
+
     /**
      * 获取服务列表
      *

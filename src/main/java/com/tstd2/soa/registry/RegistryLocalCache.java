@@ -18,27 +18,27 @@ public class RegistryLocalCache {
 
     private static RedisClient redisClient;
 
-    static  {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                /**
-                 * 监听redis
-                 */
-                final ApplicationContext applicationContext = Registry.getApplicationContext();
-                Registry registry = applicationContext.getBean(Registry.class);
-                createRedisPool(registry.getAddress());
-
-                redisClient.subscribe(new JedisPubSub() {
-                    @Override
-                    public void onMessage(String channel, String interfaceName) {
-                        List<RegistryNode> registryList = BaseRegistryDelegate.getRegistry(interfaceName, applicationContext);
-                        setRegistry(interfaceName, registryList);
-                    }
-                }, "redis-registry");
-            }
-        }).start();
-    }
+//    static  {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                /**
+//                 * 监听redis
+//                 */
+//                final ApplicationContext applicationContext = Registry.getApplicationContext();
+//                Registry registry = applicationContext.getBean(Registry.class);
+//                createRedisPool(registry.getAddress());
+//
+//                redisClient.subscribe(new JedisPubSub() {
+//                    @Override
+//                    public void onMessage(String channel, String interfaceName) {
+//                        List<RegistryNode> registryList = BaseRegistryDelegate.getRegistry(interfaceName, applicationContext);
+//                        setRegistry(interfaceName, registryList);
+//                    }
+//                }, "redis-registry");
+//            }
+//        }).start();
+//    }
 
     /**
      * 初始化redis

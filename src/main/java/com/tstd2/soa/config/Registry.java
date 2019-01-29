@@ -2,6 +2,7 @@ package com.tstd2.soa.config;
 
 import com.tstd2.soa.registry.BaseRegistry;
 import com.tstd2.soa.registry.redis.RedisRegistry;
+import com.tstd2.soa.registry.zookeeper.ZookeeperRegistry;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -24,7 +25,7 @@ public class Registry extends BaseConfigBean implements InitializingBean, Applic
 
     static {
         registryMap.put("redis", new RedisRegistry());
-//        registryMap.put("zookeeper", new ZookeeperRegistry());
+        registryMap.put("zookeeper", new ZookeeperRegistry());
     }
 
     public String getProtocol() {

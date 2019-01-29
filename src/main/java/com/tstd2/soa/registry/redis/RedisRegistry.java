@@ -5,7 +5,9 @@ import com.tstd2.soa.config.Protocol;
 import com.tstd2.soa.config.Registry;
 import com.tstd2.soa.config.Service;
 import com.tstd2.soa.registry.BaseRegistry;
+import com.tstd2.soa.registry.NotifyListener;
 import com.tstd2.soa.registry.RegistryNode;
+import com.tstd2.soa.registry.ServerNode;
 import org.springframework.context.ApplicationContext;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -49,6 +51,21 @@ public class RedisRegistry implements BaseRegistry {
         return false;
     }
 
+    @Override
+    public void unregister(String interfaceName, ServerNode serverfNode) {
+
+    }
+
+    @Override
+    public void subscribe(ServerNode serverfNode, NotifyListener listener) {
+
+    }
+
+    @Override
+    public void unsubscribe(ServerNode serverfNode, NotifyListener listener) {
+
+    }
+
     private void sadd(String interfaceName, RegistryNode registryNode) {
         if (redisClient.exists(interfaceName)) {
 
@@ -57,30 +74,20 @@ public class RedisRegistry implements BaseRegistry {
 
             Set<String> nodeSet = this.redisClient.smembers(interfaceName);
 
-            boolean isold = false;
-
             for (String nodeJson : nodeSet) {
                 RegistryNode node = JsonUtils.fromJson(nodeJson, RegistryNode.class);
 
-                // 是有有相同的机器
+                // 是有有相同的机器，则删除后更新
                 if (host.equals(node.getProtocol().getHost()) && port.equals(node.getProtocol().getPort())) {
-                    isold = true;
+                    // 存在则更新
+                    this.redisClient.srem(interfaceName, nodeJson);
                     break;
                 }
             }
-
-            if (isold) {
-                // 存在则更新
-                this.redisClient.del(interfaceName);
-                this.redisClient.sadd(interfaceName, JsonUtils.toJson(registryNode));
-            } else {
-                // 新加入的机器
-                this.redisClient.sadd(interfaceName, JsonUtils.toJson(registryNode));
-            }
-        } else {
-            // 第一次加入
-            this.redisClient.sadd(interfaceName, JsonUtils.toJson(registryNode));
         }
+
+        this.redisClient.sadd(interfaceName, JsonUtils.toJson(registryNode));
+
     }
 
     /**
