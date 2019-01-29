@@ -1,7 +1,7 @@
 package com.tstd2.soa.remoting.netty.server;
 
 import com.esotericsoftware.reflectasm.MethodAccess;
-import com.tstd2.soa.common.ClassLocalCache;
+import com.tstd2.soa.common.ReflectionCache;
 import com.tstd2.soa.config.Service;
 import com.tstd2.soa.remoting.netty.ErrorCode;
 import com.tstd2.soa.remoting.netty.model.Request;
@@ -10,8 +10,6 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.context.ApplicationContext;
-
-import java.lang.reflect.Method;
 
 public class ResponseClientUtil {
 
@@ -42,7 +40,7 @@ public class ResponseClientUtil {
     private static Object reflect(Request request) throws Exception {
         // 从spring服务实例对象
         ApplicationContext application = Service.getApplicationContext();
-        Class<?> clazz = ClassLocalCache.putAndGet(request.getClassName());
+        Class<?> clazz = ReflectionCache.putAndGetClass(request.getClassName());
         Object serviceBean = application.getBean(clazz);
 
         // 代理对象里面方法名称和方法参数
@@ -50,8 +48,10 @@ public class ResponseClientUtil {
 //        Object result = method.invoke(serviceBean, request.getParametersValue());
 
         // 用reflectasm提高反射性能
-        MethodAccess methodAccess = MethodAccess.get(serviceBean.getClass());
-        int methodIndex = methodAccess.getIndex(request.getMethodName(), request.getParametersType());
+//        MethodAccess methodAccess = MethodAccess.get(serviceBean.getClass());
+//        int methodIndex = methodAccess.getIndex(request.getMethodName(), request.getParametersType());
+        MethodAccess methodAccess = ReflectionCache.putAndGetMethodAccess(serviceBean.getClass());
+        int methodIndex = ReflectionCache.putAndGetMethodIndex(serviceBean.getClass(), request.getMethodName(), request.getParametersType(), methodAccess);
         Object result = methodAccess.invoke(serviceBean, methodIndex, request.getParametersValue());
 
         return result;

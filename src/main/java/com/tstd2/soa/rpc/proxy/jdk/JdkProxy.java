@@ -1,6 +1,6 @@
 package com.tstd2.soa.rpc.proxy.jdk;
 
-import com.tstd2.soa.common.ClassLocalCache;
+import com.tstd2.soa.common.ReflectionCache;
 import com.tstd2.soa.config.Reference;
 import com.tstd2.soa.rpc.invoke.Invoke;
 import com.tstd2.soa.rpc.proxy.RpcProxy;
@@ -13,7 +13,7 @@ public class JdkProxy implements RpcProxy {
 
         // 生成一个代理对象
         return Proxy.newProxyInstance(this.getClass().getClassLoader(),
-                new Class<?>[]{ClassLocalCache.putAndGet(className)},
+                new Class<?>[]{ReflectionCache.putAndGetClass(className)},
                 new InvokeInvocationHandler(invoke, reference));
     }
 }
