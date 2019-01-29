@@ -37,8 +37,7 @@ public class ResponseFuture {
             if (this.response != null) {
                 return this.response.getResult();
             } else {
-                String msg = String.format("Timeout by: %ss! Class: %s, method: %s, sessionId: %s", timeout,
-                        request.getClassName(), request.getMethodName(), request.getSessionId());
+                String msg = this.buildErrorMsg(timeout);
                 throw new TimeoutException(msg);
             }
         } finally {
@@ -54,5 +53,15 @@ public class ResponseFuture {
         } finally {
             lock.unlock();
         }
+    }
+
+    private String buildErrorMsg(int timeout) {
+        StringBuilder builder = new StringBuilder();
+        for (Class<?> type : request.getParametersType()) {
+            builder.append(type.getName()).append(",");
+        }
+        builder.delete(builder.lastIndexOf(","), builder.length());
+        return String.format("Timeout by: %ss! Class: %s, method: %s(%s), sessionId: %s", timeout,
+                request.getClassName(), request.getMethodName(), builder.toString(), request.getSessionId());
     }
 }
