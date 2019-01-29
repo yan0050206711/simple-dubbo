@@ -16,8 +16,7 @@ public class RandomLoadBalance implements LoadBalance {
         int size = registryInfo.size();
         int index = 0;
         if (size > 1) {
-            ThreadLocalRandom random = ThreadLocalRandom.current();
-            index = random.nextInt(size);
+            index = ThreadLocalRandom.current().nextInt(size);
         }
         RegistryNode node = registryInfo.get(index);
 
