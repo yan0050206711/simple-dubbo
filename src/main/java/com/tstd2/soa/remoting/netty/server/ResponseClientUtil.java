@@ -1,5 +1,6 @@
 package com.tstd2.soa.remoting.netty.server;
 
+import com.esotericsoftware.reflectasm.MethodAccess;
 import com.tstd2.soa.common.ClassLocalCache;
 import com.tstd2.soa.config.Service;
 import com.tstd2.soa.remoting.netty.ErrorCode;
@@ -45,8 +46,14 @@ public class ResponseClientUtil {
         Object serviceBean = application.getBean(clazz);
 
         // 代理对象里面方法名称和方法参数
-        Method method = clazz.getMethod(request.getMethodName(), request.getParametersType());
-        Object result = method.invoke(serviceBean, request.getParametersValue());
+//        Method method = clazz.getMethod(request.getMethodName(), request.getParametersType());
+//        Object result = method.invoke(serviceBean, request.getParametersValue());
+
+        // 用reflectasm提高反射性能
+        MethodAccess methodAccess = MethodAccess.get(serviceBean.getClass());
+        int methodIndex = methodAccess.getIndex(request.getMethodName(), request.getParametersType());
+        Object result = methodAccess.invoke(serviceBean, methodIndex, request.getParametersValue());
+
         return result;
     }
 
