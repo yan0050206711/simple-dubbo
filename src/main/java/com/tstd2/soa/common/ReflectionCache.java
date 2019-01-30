@@ -3,6 +3,7 @@ package com.tstd2.soa.common;
 import com.esotericsoftware.reflectasm.MethodAccess;
 
 import java.lang.reflect.Method;
+import java.util.StringJoiner;
 import java.util.WeakHashMap;
 
 public class ReflectionCache {
@@ -57,12 +58,12 @@ public class ReflectionCache {
     }
 
     private static String join(Class<?> classType, String methodName, Class<?>[] parametersType) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(classType.getName()).append("-").append(methodName).append("-");
+        StringJoiner joiner = new StringJoiner("-");
+        joiner.add(classType.getName()).add(methodName);
         for (Class<?> type : parametersType) {
-            builder.append(type.getName()).append(";");
+            joiner.add(type.getName());
         }
-        return builder.toString();
+        return joiner.toString();
     }
 
     public static void putMethodAccess(Class<?> classType, MethodAccess methodAccess) {
