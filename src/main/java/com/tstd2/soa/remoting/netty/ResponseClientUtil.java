@@ -1,4 +1,4 @@
-package com.tstd2.soa.remoting.netty.server;
+package com.tstd2.soa.remoting.netty;
 
 import com.esotericsoftware.reflectasm.MethodAccess;
 import com.tstd2.soa.common.ReflectionCache;
@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationContext;
 
 public class ResponseClientUtil {
 
-    public static boolean response(Request request, Response response, ChannelHandlerContext ctx) {
+    public static Response response(Request request, Response response) {
         // 取出request对应sessionId
         response.setSessionId(request.getSessionId());
 
@@ -27,14 +27,7 @@ public class ResponseClientUtil {
             response.setErrorMsg(e.getMessage());
         }
 
-        // netty异步的方式写回给客户端
-        ctx.writeAndFlush(response).addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture channelFuture) throws Exception {
-//                System.out.println("RPC Server Send response sessionId:" + request.getSessionId());
-            }
-        });
-        return true;
+        return response;
     }
 
     private static Object reflect(Request request) throws Exception {

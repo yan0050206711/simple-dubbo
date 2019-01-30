@@ -7,6 +7,7 @@ import com.tstd2.soa.rpc.cluster.Cluster;
 import com.tstd2.soa.rpc.cluster.FailfastClusterInvoke;
 import com.tstd2.soa.rpc.cluster.FailoverClusterInvoke;
 import com.tstd2.soa.rpc.cluster.FailsafeClusterInvoke;
+import com.tstd2.soa.rpc.invoke.HttpInvoke;
 import com.tstd2.soa.rpc.invoke.Invoke;
 import com.tstd2.soa.rpc.invoke.NettyInvoke;
 import com.tstd2.soa.rpc.loadbalance.LoadBalance;
@@ -69,7 +70,7 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
 
     static {
         invokes.put("netty", new NettyInvoke());
-//        invokes.put("mina", new MineInvoke());
+        invokes.put("http", new HttpInvoke());
 
         loadBalances.put("random", new RandomLoadBalance());
         loadBalances.put("roundrob", new RoundrobLoadBalance());
