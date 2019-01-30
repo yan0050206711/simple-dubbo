@@ -3,7 +3,7 @@ package com.tstd2.soa.remoting.http.server;
 import com.tstd2.soa.common.JsonUtils;
 import com.tstd2.soa.remoting.exchange.model.Request;
 import com.tstd2.soa.remoting.exchange.model.Response;
-import com.tstd2.soa.remoting.netty.ResponseClientUtil;
+import com.tstd2.soa.remoting.ResponseClientUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

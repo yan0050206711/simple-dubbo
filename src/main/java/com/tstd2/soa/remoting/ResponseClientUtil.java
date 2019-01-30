@@ -1,4 +1,4 @@
-package com.tstd2.soa.remoting.netty;
+package com.tstd2.soa.remoting;
 
 import com.esotericsoftware.reflectasm.MethodAccess;
 import com.tstd2.soa.common.ReflectionCache;

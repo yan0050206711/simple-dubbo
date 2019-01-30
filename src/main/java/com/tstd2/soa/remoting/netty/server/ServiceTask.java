@@ -2,7 +2,7 @@ package com.tstd2.soa.remoting.netty.server;
 
 import com.tstd2.soa.remoting.exchange.model.Request;
 import com.tstd2.soa.remoting.exchange.model.Response;
-import com.tstd2.soa.remoting.netty.ResponseClientUtil;
+import com.tstd2.soa.remoting.ResponseClientUtil;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;

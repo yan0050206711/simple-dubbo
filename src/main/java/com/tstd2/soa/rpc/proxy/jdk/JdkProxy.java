@@ -3,6 +3,7 @@ package com.tstd2.soa.rpc.proxy.jdk;
 import com.tstd2.soa.common.ReflectionCache;
 import com.tstd2.soa.config.Reference;
 import com.tstd2.soa.rpc.invoke.Invoke;
+import com.tstd2.soa.rpc.proxy.InvokeInvocationHandler;
 import com.tstd2.soa.rpc.proxy.RpcProxy;
 
 import java.lang.reflect.Proxy;

@@ -1,4 +1,4 @@
-package com.tstd2.soa.rpc.proxy.jdk;
+package com.tstd2.soa.rpc.proxy;
 
 import com.tstd2.soa.rpc.cluster.Cluster;
 import com.tstd2.soa.config.Reference;
@@ -11,7 +11,6 @@ import java.lang.reflect.Method;
 public class InvokeInvocationHandler implements InvocationHandler {
 
     private Invoke invoke;
-
     private Reference reference;
 
     public InvokeInvocationHandler(Invoke invoke, Reference reference) {

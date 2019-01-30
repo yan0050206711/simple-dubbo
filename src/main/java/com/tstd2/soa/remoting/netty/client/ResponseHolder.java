@@ -7,8 +7,8 @@ public class ResponseHolder {
 
     private static Map<String, ResponseFuture> responseMap = new ConcurrentHashMap<>();
 
-    public static void put(String key, ResponseFuture callBack) {
-        responseMap.put(key, callBack);
+    public static void put(String key, ResponseFuture future) {
+        responseMap.put(key, future);
     }
 
     public static ResponseFuture get(String key) {
