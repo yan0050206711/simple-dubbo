@@ -49,7 +49,6 @@ public class ResponseFuture {
 
     public void over(Response response) {
         try {
-            ResponseHolder.remove(request.getSessionId());
             lock.lock();
             finish.signal();
             this.response = response;

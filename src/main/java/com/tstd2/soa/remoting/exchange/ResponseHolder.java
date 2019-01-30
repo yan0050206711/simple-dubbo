@@ -15,7 +15,7 @@ public class ResponseHolder {
         return responseMap.get(key);
     }
 
-    public static void remove(Long key) {
-        responseMap.remove(key);
+    public static ResponseFuture remove(Long key) {
+        return responseMap.remove(key);
     }
 }
