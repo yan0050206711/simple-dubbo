@@ -5,13 +5,17 @@ import com.tstd2.soa.config.Protocol;
 import com.tstd2.soa.config.Registry;
 import com.tstd2.soa.config.Service;
 import com.tstd2.soa.registry.BaseRegistry;
-import com.tstd2.soa.registry.NotifyListener;
+import com.tstd2.soa.registry.support.NotifyListener;
 import com.tstd2.soa.registry.RegistryNode;
-import com.tstd2.soa.registry.ServerNode;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.cache.ChildData;
+import org.apache.curator.framework.recipes.cache.PathChildrenCache;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.zookeeper.CreateMode;
 import org.springframework.context.ApplicationContext;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,18 +52,49 @@ public class ZookeeperRegistry implements BaseRegistry {
     }
 
     @Override
-    public void unregister(String interfaceName, ServerNode serverfNode) {
+    public void unregister(String interfaceName, RegistryNode registryNode) {
 
     }
 
     @Override
-    public void subscribe(ServerNode serverfNode, NotifyListener listener) {
-
+    public void subscribe(String interfaceName, NotifyListener listener) {
+        String interfacePath = BASE_PATH + "/" + interfaceName + "/providers";
+        PathChildrenCache watcher = new PathChildrenCache(this.zkClient, interfacePath, true);
+        watcher.getListenable().addListener(new PathChildrenCacheListener() {
+            @Override
+            public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
+                ChildData data = event.getData();
+                switch (event.getType()) {
+                    case CHILD_ADDED:
+                        listener.notify(getRegistryNodes(interfaceName));
+                        break;
+                    case CHILD_REMOVED:
+                        listener.notify(getRegistryNodes(interfaceName));
+                        break;
+                    case CHILD_UPDATED:
+                        listener.notify(getRegistryNodes(interfaceName));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        try {
+            watcher.start(PathChildrenCache.StartMode.POST_INITIALIZED_EVENT);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void unsubscribe(ServerNode serverfNode, NotifyListener listener) {
-
+    public void unsubscribe(String interfaceName, NotifyListener listener) {
+        String interfacePath = BASE_PATH + "/" + interfaceName + "/providers";
+        PathChildrenCache watcher = new PathChildrenCache(this.zkClient, interfacePath, true);
+        try {
+            watcher.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -68,17 +103,26 @@ public class ZookeeperRegistry implements BaseRegistry {
             Registry registry = application.getBean(Registry.class);
             this.createZk(registry.getAddress());
 
-            String interfacePath = BASE_PATH + "/" + interfaceName + "/providers";
-            if (this.zkClient.checkExists().forPath(interfacePath) != null) {
-                List<String> nodes = this.zkClient.getChildren().forPath(interfacePath);
-                List<RegistryNode> nodeList = new ArrayList<>();
-                for (String str : nodes) {
-                    nodeList.add(JsonUtils.fromJson(str, RegistryNode.class));
-                }
-                return nodeList;
-            }
+            List<RegistryNode> nodeList = this.getRegistryNodes(interfaceName);
+            return nodeList;
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 获取服务节点
+     */
+    private List<RegistryNode> getRegistryNodes(String interfaceName) throws Exception {
+        String interfacePath = BASE_PATH + "/" + interfaceName + "/providers";
+        if (this.zkClient.checkExists().forPath(interfacePath) != null) {
+            List<String> nodes = this.zkClient.getChildren().forPath(interfacePath);
+            List<RegistryNode> nodeList = new ArrayList<>();
+            for (String str : nodes) {
+                nodeList.add(JsonUtils.fromJson(str, RegistryNode.class));
+            }
+            return nodeList;
         }
         return null;
     }
@@ -97,6 +141,9 @@ public class ZookeeperRegistry implements BaseRegistry {
         this.zkClient = ZookeeperFactory.create(address);
     }
 
+    /**
+     * 添加服务节点
+     */
     private void sadd(String interfaceName, RegistryNode registryNode) throws Exception {
 
         String interfacePath = BASE_PATH + "/" + interfaceName + "/providers";

@@ -1,7 +1,7 @@
 package com.tstd2.soa.config;
 
 import com.tstd2.soa.registry.BaseRegistryDelegate;
-import com.tstd2.soa.registry.RegistryLocalCache;
+import com.tstd2.soa.registry.support.RegistryLocalCache;
 import com.tstd2.soa.registry.RegistryNode;
 import com.tstd2.soa.rpc.cluster.Cluster;
 import com.tstd2.soa.rpc.cluster.FailfastClusterInvoke;
@@ -21,7 +21,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

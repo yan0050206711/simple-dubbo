@@ -5,16 +5,12 @@ import com.tstd2.soa.config.Protocol;
 import com.tstd2.soa.config.Registry;
 import com.tstd2.soa.config.Service;
 import com.tstd2.soa.registry.BaseRegistry;
-import com.tstd2.soa.registry.NotifyListener;
+import com.tstd2.soa.registry.support.NotifyListener;
 import com.tstd2.soa.registry.RegistryNode;
-import com.tstd2.soa.registry.ServerNode;
 import org.springframework.context.ApplicationContext;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -52,17 +48,17 @@ public class RedisRegistry implements BaseRegistry {
     }
 
     @Override
-    public void unregister(String interfaceName, ServerNode serverfNode) {
+    public void unregister(String interfaceName, RegistryNode registryNode) {
 
     }
 
     @Override
-    public void subscribe(ServerNode serverfNode, NotifyListener listener) {
+    public void subscribe(String interfaceName, NotifyListener listener) {
 
     }
 
     @Override
-    public void unsubscribe(ServerNode serverfNode, NotifyListener listener) {
+    public void unsubscribe(String interfaceName, NotifyListener listener) {
 
     }
 

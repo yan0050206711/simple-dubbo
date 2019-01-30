@@ -1,5 +1,6 @@
 package com.tstd2.soa.registry;
 
+import com.tstd2.soa.registry.support.NotifyListener;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
@@ -15,11 +16,29 @@ public interface BaseRegistry {
      */
     boolean registry(String interfaceName, ApplicationContext application);
 
-    void unregister(String interfaceName, ServerNode serverfNode);
+    /**
+     * 取消注册
+     *
+     * @param interfaceName
+     * @param registryNode
+     */
+    void unregister(String interfaceName, RegistryNode registryNode);
 
-    void subscribe(ServerNode serverfNode, NotifyListener listener);
+    /**
+     * 订阅服务
+     *
+     * @param interfaceName
+     * @param listener
+     */
+    void subscribe(String interfaceName, NotifyListener listener);
 
-    void unsubscribe(ServerNode serverfNode, NotifyListener listener);
+    /**
+     * 取消订阅
+     *
+     * @param interfaceName
+     * @param listener
+     */
+    void unsubscribe(String interfaceName, NotifyListener listener);
 
     /**
      * 获取服务列表

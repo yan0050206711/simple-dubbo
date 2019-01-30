@@ -1,7 +1,7 @@
 package com.tstd2.soa.rpc.invoke;
 
 import com.tstd2.soa.config.Reference;
-import com.tstd2.soa.registry.RegistryLocalCache;
+import com.tstd2.soa.registry.support.RegistryLocalCache;
 import com.tstd2.soa.rpc.loadbalance.LoadBalance;
 import com.tstd2.soa.remoting.netty.client.MessageSender;
 import com.tstd2.soa.registry.RegistryNode;
