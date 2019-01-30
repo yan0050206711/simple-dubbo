@@ -1,4 +1,4 @@
-package com.tstd2.soa.remoting.netty.client;
+package com.tstd2.soa.remoting.exchange;
 
 
 import com.tstd2.soa.remoting.ErrorCode;

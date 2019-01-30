@@ -11,7 +11,7 @@ public class HessianSerializePool {
     //Netty采用Hessian序列化/反序列化的时候，为了避免重复产生对象，提高JVM内存利用率，故引入对象池技术，经过测试
     //遇到高并发序列化/反序列化的场景的时候，序列化效率明显提升不少。
     private GenericObjectPool<HessianSerialize> hessianPool;
-    private static HessianSerializePool poolFactory = null;
+    private volatile static HessianSerializePool poolFactory = null;
 
     private HessianSerializePool() {
         hessianPool = new GenericObjectPool<HessianSerialize>(new HessianSerializeFactory());

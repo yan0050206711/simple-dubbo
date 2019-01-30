@@ -9,7 +9,7 @@ public class Request implements Serializable {
     /**
      * 请求ID
      */
-    private String sessionId;
+    private Long sessionId;
     /**
      * 类名
      */
@@ -31,11 +31,11 @@ public class Request implements Serializable {
         return serialVersionUID;
     }
 
-    public String getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 

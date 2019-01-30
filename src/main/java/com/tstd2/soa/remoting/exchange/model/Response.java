@@ -7,16 +7,16 @@ import java.io.Serializable;
  */
 public class Response implements Serializable {
 
-    private String sessionId;
+    private Long sessionId;
     private Object result;
     private String resultCode;
     private String errorMsg;
 
-    public String getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 

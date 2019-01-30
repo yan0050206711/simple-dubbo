@@ -1,5 +1,6 @@
 package com.tstd2.soa.rpc.invoke;
 
+import com.tstd2.soa.common.LogIds;
 import com.tstd2.soa.config.Protocol;
 import com.tstd2.soa.config.Reference;
 import com.tstd2.soa.registry.RegistryNode;
@@ -9,7 +10,6 @@ import com.tstd2.soa.rpc.loadbalance.LoadBalance;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.UUID;
 
 public abstract class AbstractInvoke implements Invoke {
 
@@ -51,7 +51,7 @@ public abstract class AbstractInvoke implements Invoke {
 
     public Request buildRequest(Invocation invocation) {
         Request request = new Request();
-        request.setSessionId(UUID.randomUUID().toString());
+        request.setSessionId(LogIds.generate());
         request.setClassName(invocation.getReference().getInf());
         request.setMethodName(invocation.getMethod().getName());
         request.setParametersType(invocation.getMethod().getParameterTypes());
