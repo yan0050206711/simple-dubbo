@@ -1,7 +1,7 @@
 package com.tstd2.soa.remoting.netty.client;
 
 import com.tstd2.soa.registry.RegistryNode;
-import com.tstd2.soa.remoting.netty.model.Request;
+import com.tstd2.soa.remoting.exchange.model.Request;
 import com.tstd2.soa.rpc.invoke.Invocation;
 
 import java.util.UUID;
@@ -21,8 +21,13 @@ public class MessageSender {
 
         // 通过netty传输管道直接拿到响应结果
         ResponseFuture future = new ResponseFuture(request);
-        ResponseHolder.put(request.getSessionId(), future);
-        NettyClient.writeAndFlush(nodeInfo.getProtocol(), request);
+
+        try {
+            NettyClient.writeAndFlush(nodeInfo.getProtocol(), request);
+        } catch (Exception e) {
+            future.cancel();
+            throw e;
+        }
 
         // 默认用客户端配置的超时时间，客户端没有配置超时时间则用提供方的
         Integer timeout = Integer.parseInt(invocation.getReference().getTimeout());

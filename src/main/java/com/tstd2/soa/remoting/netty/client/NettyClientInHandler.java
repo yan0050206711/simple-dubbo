@@ -1,6 +1,6 @@
 package com.tstd2.soa.remoting.netty.client;
 
-import com.tstd2.soa.remoting.netty.model.Response;
+import com.tstd2.soa.remoting.exchange.model.Response;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -15,7 +15,6 @@ public class NettyClientInHandler extends ChannelInboundHandlerAdapter {
 
         ResponseFuture future = ResponseHolder.get(sessionId);
         if (future != null) {
-            ResponseHolder.remove(sessionId);
             future.over(response);
         }
     }

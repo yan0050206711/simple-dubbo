@@ -1,7 +1,7 @@
 package com.tstd2.soa.remoting.netty.server;
 
-import com.tstd2.soa.remoting.netty.model.Request;
-import com.tstd2.soa.remoting.netty.model.Response;
+import com.tstd2.soa.remoting.exchange.model.Request;
+import com.tstd2.soa.remoting.exchange.model.Response;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.concurrent.Callable;

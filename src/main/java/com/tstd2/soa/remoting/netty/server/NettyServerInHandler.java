@@ -1,9 +1,8 @@
 package com.tstd2.soa.remoting.netty.server;
 
 import com.tstd2.soa.config.Protocol;
-import com.tstd2.soa.config.Service;
-import com.tstd2.soa.remoting.netty.model.Request;
-import com.tstd2.soa.remoting.netty.model.Response;
+import com.tstd2.soa.remoting.exchange.model.Request;
+import com.tstd2.soa.remoting.exchange.model.Response;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.springframework.context.ApplicationContext;

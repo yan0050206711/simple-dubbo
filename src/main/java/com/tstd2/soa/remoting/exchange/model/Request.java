@@ -1,4 +1,4 @@
-package com.tstd2.soa.remoting.netty.model;
+package com.tstd2.soa.remoting.exchange.model;
 
 import java.io.Serializable;
 

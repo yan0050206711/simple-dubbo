@@ -1,8 +1,9 @@
 package com.tstd2.soa.remoting.netty.client;
 
 
-import com.tstd2.soa.remoting.netty.model.Request;
-import com.tstd2.soa.remoting.netty.model.Response;
+import com.tstd2.soa.remoting.ErrorCode;
+import com.tstd2.soa.remoting.exchange.model.Request;
+import com.tstd2.soa.remoting.exchange.model.Response;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -22,6 +23,7 @@ public class ResponseFuture {
 
     public ResponseFuture(Request request) {
         this.request = request;
+        ResponseHolder.put(request.getSessionId(), this);
     }
 
     public Object start(int timeout) throws Exception {
@@ -37,7 +39,7 @@ public class ResponseFuture {
             if (this.response != null) {
                 return this.response.getResult();
             } else {
-                String msg = this.buildErrorMsg(timeout);
+                String msg = buildErrorMsg(timeout);
                 throw new TimeoutException(msg);
             }
         } finally {
@@ -47,12 +49,22 @@ public class ResponseFuture {
 
     public void over(Response response) {
         try {
+            ResponseHolder.remove(request.getSessionId());
             lock.lock();
             finish.signal();
             this.response = response;
         } finally {
             lock.unlock();
         }
+    }
+
+    public void cancel() {
+        Response errorResult = new Response();
+        errorResult.setSessionId(request.getSessionId());
+        errorResult.setErrorMsg("request future has been canceled.");
+        errorResult.setResultCode(ErrorCode.ERROR.errorCode);
+        response = errorResult;
+        ResponseHolder.remove(request.getSessionId());
     }
 
     private String buildErrorMsg(int timeout) {
