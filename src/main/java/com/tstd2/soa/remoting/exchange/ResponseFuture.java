@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ResponseFuture {
 
     private Request request;
-    private Response response;
+    private volatile Response response;
     private Lock lock = new ReentrantLock();
     private Condition finish = lock.newCondition();
 
@@ -49,6 +49,7 @@ public class ResponseFuture {
 
     public void over(Response response) {
         try {
+            ResponseHolder.remove(request.getSessionId());
             lock.lock();
             finish.signal();
             this.response = response;
