@@ -9,7 +9,7 @@ public class Response implements Serializable {
 
     private Long sessionId;
     private Object result;
-    private String resultCode;
+    private Integer resultCode;
     private String errorMsg;
 
     public Long getSessionId() {
@@ -28,11 +28,11 @@ public class Response implements Serializable {
         this.result = result;
     }
 
-    public String getResultCode() {
+    public Integer getResultCode() {
         return resultCode;
     }
 
-    public void setResultCode(String resultCode) {
+    public void setResultCode(Integer resultCode) {
         this.resultCode = resultCode;
     }
 

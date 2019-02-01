@@ -2,11 +2,11 @@ package com.tstd2.soa.remoting;
 
 public enum ErrorCode {
 
-    SUCCESS("1"), ERROR("2");
+    SUCCESS(1), ERROR(2);
 
-    public String errorCode;
+    public int errorCode;
 
-    ErrorCode(String errorCode) {
+    ErrorCode(int errorCode) {
         this.errorCode = errorCode;
     }
 

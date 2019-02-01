@@ -29,15 +29,15 @@ public class ResponseFuture {
     public Object start(int timeout) throws Exception {
         try {
             lock.lock();
-            if (this.response != null) {
-                return this.response.getResult();
+            if (this.isDone()) {
+                return this.returnFromResponse();
             }
 
             // 超时设置
             finish.await(timeout, TimeUnit.MILLISECONDS);
 
-            if (this.response != null) {
-                return this.response.getResult();
+            if (this.isDone()) {
+                return this.returnFromResponse();
             } else {
                 String msg = buildErrorMsg(timeout);
                 throw new TimeoutException(msg);
@@ -55,6 +55,22 @@ public class ResponseFuture {
         } finally {
             lock.unlock();
         }
+    }
+
+    public boolean isDone() {
+        return this.request != null;
+    }
+
+    private Object returnFromResponse() {
+        if (!isDone()) {
+            throw new IllegalStateException("response cannot be null");
+        }
+
+        if (ErrorCode.SUCCESS.errorCode == response.getResultCode()) {
+            return response.getResult();
+        }
+
+        throw new RuntimeException(response.getErrorMsg());
     }
 
     public void cancel() {
