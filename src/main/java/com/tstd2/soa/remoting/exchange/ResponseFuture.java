@@ -39,7 +39,7 @@ public class ResponseFuture {
             if (this.isDone()) {
                 return this.returnFromResponse();
             } else {
-                String msg = buildErrorMsg(timeout);
+                String msg = getTimeoutMessage(timeout);
                 throw new TimeoutException(msg);
             }
         } finally {
@@ -58,7 +58,7 @@ public class ResponseFuture {
     }
 
     public boolean isDone() {
-        return this.request != null;
+        return this.response != null;
     }
 
     private Object returnFromResponse() {
@@ -82,7 +82,7 @@ public class ResponseFuture {
         ResponseHolder.remove(request.getSessionId());
     }
 
-    private String buildErrorMsg(int timeout) {
+    private String getTimeoutMessage(int timeout) {
         StringBuilder builder = new StringBuilder();
         for (Class<?> type : request.getParametersType()) {
             builder.append(type.getName()).append(",");
