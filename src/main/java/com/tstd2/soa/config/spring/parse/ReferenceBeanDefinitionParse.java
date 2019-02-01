@@ -72,7 +72,7 @@ public class ReferenceBeanDefinitionParse implements BeanDefinitionParser {
         beanDefinition.getPropertyValues().addPropertyValue("retries", retries);
         beanDefinition.getPropertyValues().addPropertyValue("timeout", timeout);
         beanDefinition.getPropertyValues().addPropertyValue("proxy", proxy);
-        parserContext.getRegistry().registerBeanDefinition("Reference-" + id, beanDefinition);
+        parserContext.getRegistry().registerBeanDefinition(id, beanDefinition);
 
         return beanDefinition;
     }
