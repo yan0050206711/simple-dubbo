@@ -13,6 +13,9 @@ public class HessianEncoder extends MessageToByteEncoder<Object> {
 
     @Override
     protected void encode(final ChannelHandlerContext ctx, final Object msg, final ByteBuf out) throws Exception {
-        HessianCodecUtil.encode(out, msg);
+        byte[] body = HessianCodecUtil.encode(msg);
+        int dataLength = body.length;
+        out.writeInt(dataLength);
+        out.writeBytes(body);
     }
 }

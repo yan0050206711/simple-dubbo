@@ -19,17 +19,15 @@ public class HessianCodecUtil {
 
     }
 
-    public static void encode(final ByteBuf out, final Object message) throws IOException {
+    public static byte[] encode(final Object message) throws IOException {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 //            closer.register(byteArrayOutputStream);
             HessianSerialize hessianSerialization = pool.borrow();
             hessianSerialization.serialize(byteArrayOutputStream, message);
             byte[] body = byteArrayOutputStream.toByteArray();
-            int dataLength = body.length;
-            out.writeInt(dataLength);
-            out.writeBytes(body);
             pool.restore(hessianSerialization);
+            return body;
         } finally {
 //            closer.close();
         }
