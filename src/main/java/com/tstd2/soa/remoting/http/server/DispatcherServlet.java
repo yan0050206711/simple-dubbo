@@ -25,6 +25,7 @@ public class DispatcherServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         AsyncContext asyncContext = req.startAsync();
+        req.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
 
         ThreadPoolExecutor executor = (ThreadPoolExecutor) req.getServletContext().getAttribute("executor");
 
