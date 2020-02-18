@@ -4,14 +4,13 @@ import com.tstd2.soa.registry.BaseRegistry;
 import com.tstd2.soa.registry.redis.RedisRegistry;
 import com.tstd2.soa.registry.zookeeper.ZookeeperRegistry;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Registry extends BaseConfigBean implements InitializingBean, ApplicationContextAware {
+public class Registry extends BaseConfigBean implements ApplicationContextAware {
 
     private static final long serialVersionUID = 6931270359014167547L;
 
@@ -20,8 +19,6 @@ public class Registry extends BaseConfigBean implements InitializingBean, Applic
     private String address;
 
     private static Map<String, BaseRegistry> registryMap = new HashMap<>();
-
-    private static ApplicationContext applicationContext;
 
     static {
         registryMap.put("redis", new RedisRegistry());
@@ -44,10 +41,6 @@ public class Registry extends BaseConfigBean implements InitializingBean, Applic
         this.address = address;
     }
 
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
     public Map<String, BaseRegistry> getRegistryMap() {
         return registryMap;
     }
@@ -57,12 +50,7 @@ public class Registry extends BaseConfigBean implements InitializingBean, Applic
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
-
-    @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Registry.applicationContext = applicationContext;
+        SpringContextHolder.setApplicationContext(applicationContext);
     }
 }

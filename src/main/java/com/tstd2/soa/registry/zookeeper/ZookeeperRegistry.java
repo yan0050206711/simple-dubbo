@@ -4,16 +4,16 @@ import com.tstd2.soa.common.JsonUtils;
 import com.tstd2.soa.config.Protocol;
 import com.tstd2.soa.config.Registry;
 import com.tstd2.soa.config.Service;
+import com.tstd2.soa.config.SpringContextHolder;
 import com.tstd2.soa.registry.BaseRegistry;
-import com.tstd2.soa.registry.support.NotifyListener;
 import com.tstd2.soa.registry.RegistryNode;
+import com.tstd2.soa.registry.support.NotifyListener;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.ChildData;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.zookeeper.CreateMode;
-import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,12 +29,12 @@ public class ZookeeperRegistry implements BaseRegistry {
     private static final String BASE_PATH = "/simple_dubbo";
 
     @Override
-    public boolean registry(String interfaceName, ApplicationContext application) {
+    public boolean registry(String interfaceName) {
         try {
-            Protocol protocol = application.getBean(Protocol.class);
-            Service service = application.getBean("Service-" + interfaceName, Service.class);
+            Protocol protocol = SpringContextHolder.getBean(Protocol.class);
+            Service service = SpringContextHolder.getBean("Service-" + interfaceName, Service.class);
 
-            Registry registry = application.getBean(Registry.class);
+            Registry registry = SpringContextHolder.getBean(Registry.class);
             this.createZk(registry.getAddress());
 
             RegistryNode node = new RegistryNode();
@@ -98,9 +98,9 @@ public class ZookeeperRegistry implements BaseRegistry {
     }
 
     @Override
-    public List<RegistryNode> getRegistry(String interfaceName, ApplicationContext application) {
+    public List<RegistryNode> getRegistry(String interfaceName) {
         try {
-            Registry registry = application.getBean(Registry.class);
+            Registry registry = SpringContextHolder.getBean(Registry.class);
             this.createZk(registry.getAddress());
 
             List<RegistryNode> nodeList = this.getRegistryNodes(interfaceName);

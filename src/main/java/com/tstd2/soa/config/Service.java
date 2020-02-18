@@ -1,12 +1,9 @@
 package com.tstd2.soa.config;
 
 import com.tstd2.soa.registry.BaseRegistryDelegate;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
-public class Service extends BaseConfigBean implements InitializingBean, ApplicationContextAware {
+public class Service extends BaseConfigBean implements InitializingBean {
 
     private static final long serialVersionUID = -8551143436340555022L;
 
@@ -17,8 +14,6 @@ public class Service extends BaseConfigBean implements InitializingBean, Applica
     private String protocol;
 
     private String timeout;
-
-    private static ApplicationContext applicationContext;
 
     public String getInf() {
         return inf;
@@ -52,20 +47,11 @@ public class Service extends BaseConfigBean implements InitializingBean, Applica
         this.timeout = timeout;
     }
 
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Service.applicationContext = applicationContext;
-    }
-
     @Override
     public void afterPropertiesSet() throws Exception {
         /**
          * 将本service注册到注册中心
          */
-        BaseRegistryDelegate.registry(inf, applicationContext);
+        BaseRegistryDelegate.registry(inf);
     }
 }

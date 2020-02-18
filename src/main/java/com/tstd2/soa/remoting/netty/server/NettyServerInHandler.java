@@ -1,11 +1,11 @@
 package com.tstd2.soa.remoting.netty.server;
 
 import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.config.SpringContextHolder;
 import com.tstd2.soa.remoting.exchange.model.Request;
 import com.tstd2.soa.remoting.exchange.model.Response;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import org.springframework.context.ApplicationContext;
 
 public class NettyServerInHandler extends ChannelInboundHandlerAdapter {
 
@@ -16,9 +16,8 @@ public class NettyServerInHandler extends ChannelInboundHandlerAdapter {
         Response response = new Response();
 
         // 从spring服务实例对象
-        ApplicationContext application = Protocol.getApplicationContext();
         // 拿到服务端协议配置
-        Protocol protocol = application.getBean(Protocol.class);
+        Protocol protocol = SpringContextHolder.getBean(Protocol.class);
 
         int threads = Integer.parseInt(protocol.getThreads());
 

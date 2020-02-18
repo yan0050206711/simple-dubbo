@@ -16,17 +16,14 @@ import com.tstd2.soa.rpc.loadbalance.RoundrobLoadBalance;
 import com.tstd2.soa.rpc.proxy.RpcProxy;
 import com.tstd2.soa.rpc.proxy.javassist.JavassistProxy;
 import com.tstd2.soa.rpc.proxy.jdk.JdkProxy;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Reference extends BaseConfigBean implements FactoryBean, InitializingBean, ApplicationContextAware {
+public class Reference extends BaseConfigBean implements FactoryBean, InitializingBean {
 
     private static final long serialVersionUID = 8473037023470434275L;
 
@@ -45,8 +42,6 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
     private String timeout;
 
     private String proxy;
-
-    private static ApplicationContext applicationContext;
 
     /**
      * 调用者
@@ -139,10 +134,6 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         this.proxy = proxy;
     }
 
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
     public static Map<String, Invoke> getInvokes() {
         return invokes;
     }
@@ -188,7 +179,7 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         if (protocol != null && !"".equals(protocol)) {
             invoke = invokes.get(protocol);
         } else {
-            Protocol prot = applicationContext.getBean(Protocol.class);
+            Protocol prot = SpringContextHolder.getBean(Protocol.class);
             if (prot != null) {
                 invoke = invokes.get(prot.getName());
             } else {
@@ -222,12 +213,8 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        List<RegistryNode> registryInfo = BaseRegistryDelegate.getRegistry(inf, applicationContext);
+        List<RegistryNode> registryInfo = BaseRegistryDelegate.getRegistry(inf);
         RegistryLocalCache.setRegistry(inf, registryInfo);
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Reference.applicationContext = applicationContext;
-    }
 }

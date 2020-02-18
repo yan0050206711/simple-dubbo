@@ -4,10 +4,10 @@ import com.tstd2.soa.common.JsonUtils;
 import com.tstd2.soa.config.Protocol;
 import com.tstd2.soa.config.Registry;
 import com.tstd2.soa.config.Service;
+import com.tstd2.soa.config.SpringContextHolder;
 import com.tstd2.soa.registry.BaseRegistry;
-import com.tstd2.soa.registry.support.NotifyListener;
 import com.tstd2.soa.registry.RegistryNode;
-import org.springframework.context.ApplicationContext;
+import com.tstd2.soa.registry.support.NotifyListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +21,13 @@ public class RedisRegistry implements BaseRegistry {
     private RedisClient redisClient;
 
     @Override
-    public boolean registry(String interfaceName, ApplicationContext application) {
+    public boolean registry(String interfaceName) {
         try {
-            Protocol protocol = application.getBean(Protocol.class);
+            Protocol protocol = SpringContextHolder.getBean(Protocol.class);
 //            Map<String, Service> services = application.getBeansOfType(Service.class);
-            Service service = application.getBean("Service-" + interfaceName, Service.class);
+            Service service = SpringContextHolder.getBean("Service-" + interfaceName, Service.class);
 
-            Registry registry = application.getBean(Registry.class);
+            Registry registry = SpringContextHolder.getBean(Registry.class);
             this.createRedisPool(registry.getAddress());
 
             RegistryNode node = new RegistryNode();
@@ -101,8 +101,8 @@ public class RedisRegistry implements BaseRegistry {
     }
 
     @Override
-    public List<RegistryNode> getRegistry(String interfaceName, ApplicationContext application) {
-        Registry registry = application.getBean(Registry.class);
+    public List<RegistryNode> getRegistry(String interfaceName) {
+        Registry registry = SpringContextHolder.getBean(Registry.class);
         this.createRedisPool(registry.getAddress());
         if (this.redisClient.exists(interfaceName)) {
             Set<String> set = this.redisClient.smembers(interfaceName);

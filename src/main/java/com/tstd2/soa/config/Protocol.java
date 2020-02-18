@@ -1,19 +1,12 @@
 package com.tstd2.soa.config;
 
 import com.tstd2.soa.remoting.netty.server.NettyServer;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-public class Protocol extends BaseConfigBean implements InitializingBean, ApplicationContextAware,
-        ApplicationListener<ContextRefreshedEvent> {
+public class Protocol extends BaseConfigBean implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final long serialVersionUID = 7082032188443659845L;
-
-    private static ApplicationContext applicationContext;
 
     private String name;
     private String port;
@@ -24,10 +17,6 @@ public class Protocol extends BaseConfigBean implements InitializingBean, Applic
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
-    }
-
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
     }
 
     public String getName() {
@@ -76,16 +65,6 @@ public class Protocol extends BaseConfigBean implements InitializingBean, Applic
 
     public void setSerialize(String serialize) {
         this.serialize = serialize;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Protocol.applicationContext = applicationContext;
     }
 
     /**
