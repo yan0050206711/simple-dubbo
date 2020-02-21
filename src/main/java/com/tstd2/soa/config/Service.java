@@ -1,9 +1,12 @@
 package com.tstd2.soa.config;
 
 import com.tstd2.soa.registry.BaseRegistryDelegate;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-public class Service extends BaseConfigBean implements InitializingBean {
+public class Service extends BaseConfigBean implements ApplicationContextAware, InitializingBean {
 
     private static final long serialVersionUID = -8551143436340555022L;
 
@@ -53,5 +56,10 @@ public class Service extends BaseConfigBean implements InitializingBean {
          * 将本service注册到注册中心
          */
         BaseRegistryDelegate.registry(inf);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        SpringContextHolder.setApplicationContext(applicationContext);
     }
 }

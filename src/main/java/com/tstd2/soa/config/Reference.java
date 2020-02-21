@@ -1,8 +1,8 @@
 package com.tstd2.soa.config;
 
 import com.tstd2.soa.registry.BaseRegistryDelegate;
-import com.tstd2.soa.registry.support.RegistryLocalCache;
 import com.tstd2.soa.registry.RegistryNode;
+import com.tstd2.soa.registry.support.RegistryLocalCache;
 import com.tstd2.soa.rpc.cluster.Cluster;
 import com.tstd2.soa.rpc.cluster.FailfastClusterInvoke;
 import com.tstd2.soa.rpc.cluster.FailoverClusterInvoke;
@@ -16,14 +16,17 @@ import com.tstd2.soa.rpc.loadbalance.RoundrobLoadBalance;
 import com.tstd2.soa.rpc.proxy.RpcProxy;
 import com.tstd2.soa.rpc.proxy.javassist.JavassistProxy;
 import com.tstd2.soa.rpc.proxy.jdk.JdkProxy;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Reference extends BaseConfigBean implements FactoryBean, InitializingBean {
+public class Reference extends BaseConfigBean implements ApplicationContextAware, FactoryBean, InitializingBean {
 
     private static final long serialVersionUID = 8473037023470434275L;
 
@@ -217,4 +220,8 @@ public class Reference extends BaseConfigBean implements FactoryBean, Initializi
         RegistryLocalCache.setRegistry(inf, registryInfo);
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        SpringContextHolder.setApplicationContext(applicationContext);
+    }
 }

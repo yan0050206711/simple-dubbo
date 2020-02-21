@@ -11,7 +11,9 @@ public class SpringContextHolder {
     private static ApplicationContext applicationContext;
 
     public static void setApplicationContext(ApplicationContext applicationContext) {
-        SpringContextHolder.applicationContext = applicationContext;
+        if (SpringContextHolder.applicationContext == null) {
+            SpringContextHolder.applicationContext = applicationContext;
+        }
     }
 
     public static <T> T getBean(Class<T> requiredType) {
