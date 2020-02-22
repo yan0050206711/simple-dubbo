@@ -13,7 +13,7 @@ import com.tstd2.soa.rpc.invoke.Invoke;
 import com.tstd2.soa.rpc.invoke.NettyInvoke;
 import com.tstd2.soa.rpc.loadbalance.LoadBalance;
 import com.tstd2.soa.rpc.loadbalance.RandomLoadBalance;
-import com.tstd2.soa.rpc.loadbalance.RoundrobLoadBalance;
+import com.tstd2.soa.rpc.loadbalance.RoundrobinLoadBalance;
 import com.tstd2.soa.rpc.proxy.RpcProxy;
 import com.tstd2.soa.rpc.proxy.javassist.JavassistProxy;
 import com.tstd2.soa.rpc.proxy.jdk.JdkProxy;
@@ -72,7 +72,7 @@ public class Reference extends BaseConfigBean implements ApplicationContextAware
         invokes.put("http", new HttpInvoke());
 
         loadBalances.put("random", new RandomLoadBalance());
-        loadBalances.put("roundrob", new RoundrobLoadBalance());
+        loadBalances.put("roundrob", new RoundrobinLoadBalance());
 
         clusters.put("failover", new FailoverClusterInvoke());
         clusters.put("failfast", new FailfastClusterInvoke());
