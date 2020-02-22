@@ -1,4 +1,4 @@
-package com.tstd2.soa.test.service;
+package com.tstd2.soa.xml.service;
 
 public class CalcServiceImpl implements CalcService {
     @Override

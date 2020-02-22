@@ -1,4 +1,4 @@
-package com.tstd2.soa.config.spring.parse;
+package com.tstd2.soa.config.spring.schema;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;

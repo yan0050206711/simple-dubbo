@@ -38,5 +38,15 @@
             <xsd:attribute name="timeout" type="xsd:string"></xsd:attribute>
         </xsd:complexType>
     </xsd:element>
+    <xsd:element name="s-annotation">
+        <xsd:complexType>
+            <xsd:attribute name="package" type="xsd:string"></xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="r-annotation">
+        <xsd:complexType>
+            <xsd:attribute name="package" type="xsd:string"></xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
 
 </xsd:schema>

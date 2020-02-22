@@ -1,4 +1,4 @@
-package com.tstd2.soa.test;
+package com.tstd2.soa.xml.test;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ServiceTest {
 
     public static void main(String[] args) throws IOException {
-        new ClassPathXmlApplicationContext("spring-config-provider.xml");
+        new ClassPathXmlApplicationContext("xml/spring-config-provider.xml");
         System.in.read();
     }
 }

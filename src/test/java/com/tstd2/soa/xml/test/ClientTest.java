@@ -1,7 +1,7 @@
-package com.tstd2.soa.test;
+package com.tstd2.soa.xml.test;
 
-import com.tstd2.soa.test.service.CalcService;
-import com.tstd2.soa.test.service.UserService;
+import com.tstd2.soa.xml.service.CalcService;
+import com.tstd2.soa.xml.service.UserService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -13,7 +13,7 @@ public class ClientTest {
 
     public static void main(String[] args) {
 
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config-consumer.xml");
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("xml/spring-config-consumer.xml");
 
         CalcService calc = applicationContext.getBean(CalcService.class);
         System.out.println(calc.add(1, 1));
