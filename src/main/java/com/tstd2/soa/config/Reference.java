@@ -1,5 +1,6 @@
 package com.tstd2.soa.config;
 
+import com.tstd2.soa.common.ReflectionCache;
 import com.tstd2.soa.registry.BaseRegistryDelegate;
 import com.tstd2.soa.registry.RegistryNode;
 import com.tstd2.soa.registry.support.RegistryLocalCache;
@@ -201,7 +202,7 @@ public class Reference extends BaseConfigBean implements ApplicationContextAware
     public Class<?> getObjectType() {
         try {
             if (inf != null && !"".equals(inf)) {
-                return Class.forName(inf);
+                return ReflectionCache.putAndGetClass(inf);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
