@@ -17,6 +17,6 @@
     <soa:registry protocol="redis" address="127.0.0.1:6380" />
 	<!--<soa:registry protocol="zookeeper" address="10.10.40.27:2181" />-->
 
-    <soa:s-annotation package="com.tstd2.soa.annotation" />
+    <soa:annotation package="com.tstd2.soa.annotation" />
 
 </beans>
