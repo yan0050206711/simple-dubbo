@@ -1,6 +1,6 @@
 package com.tstd2.soa.common;
 
-import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.config.ProtocolBean;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -9,7 +9,7 @@ public class ThreadPoolFactory {
 
     private static final AtomicInteger mThreadNum = new AtomicInteger(0);
 
-    public static ThreadPoolExecutor initThreadPool(int threads, Protocol protocol) {
+    public static ThreadPoolExecutor initThreadPool(int threads, ProtocolBean protocol) {
         final String threadName = "SimpleDubboThread-" + protocol.getHost() + ":" + protocol.getPort();
         int corePoolSize = Runtime.getRuntime().availableProcessors() * 2;
         int maxPoolSize = threads > corePoolSize ? threads : corePoolSize;
@@ -27,9 +27,9 @@ public class ThreadPoolFactory {
     static class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
 
         String threadName;
-        Protocol protocol;
+        ProtocolBean protocol;
 
-        AbortPolicyWithReport(String threadName, Protocol protocol) {
+        AbortPolicyWithReport(String threadName, ProtocolBean protocol) {
             this.threadName = threadName;
             this.protocol = protocol;
         }

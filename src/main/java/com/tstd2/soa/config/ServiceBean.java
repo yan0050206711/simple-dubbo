@@ -5,7 +5,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-public class Service extends ServiceConfig implements ApplicationContextAware, InitializingBean {
+public class ServiceBean extends ServiceConfig implements ApplicationContextAware, InitializingBean {
 
     private static final long serialVersionUID = -8551143436340555022L;
 

@@ -1,9 +1,9 @@
 package com.tstd2.soa.registry.zookeeper;
 
 import com.tstd2.soa.common.JsonUtils;
-import com.tstd2.soa.config.Protocol;
-import com.tstd2.soa.config.Registry;
-import com.tstd2.soa.config.Service;
+import com.tstd2.soa.config.ProtocolBean;
+import com.tstd2.soa.config.RegistryBean;
+import com.tstd2.soa.config.ServiceBean;
 import com.tstd2.soa.config.SpringContextHolder;
 import com.tstd2.soa.registry.BaseRegistry;
 import com.tstd2.soa.registry.RegistryNode;
@@ -31,10 +31,10 @@ public class ZookeeperRegistry implements BaseRegistry {
     @Override
     public boolean registry(String interfaceName) {
         try {
-            Protocol protocol = SpringContextHolder.getBean(Protocol.class);
-            Service service = SpringContextHolder.getBean("Service-" + interfaceName, Service.class);
+            ProtocolBean protocol = SpringContextHolder.getBean(ProtocolBean.class);
+            ServiceBean service = SpringContextHolder.getBean("Service-" + interfaceName, ServiceBean.class);
 
-            Registry registry = SpringContextHolder.getBean(Registry.class);
+            RegistryBean registry = SpringContextHolder.getBean(RegistryBean.class);
             this.createZk(registry.getAddress());
 
             RegistryNode node = new RegistryNode();
@@ -100,7 +100,7 @@ public class ZookeeperRegistry implements BaseRegistry {
     @Override
     public List<RegistryNode> getRegistry(String interfaceName) {
         try {
-            Registry registry = SpringContextHolder.getBean(Registry.class);
+            RegistryBean registry = SpringContextHolder.getBean(RegistryBean.class);
             this.createZk(registry.getAddress());
 
             List<RegistryNode> nodeList = this.getRegistryNodes(interfaceName);

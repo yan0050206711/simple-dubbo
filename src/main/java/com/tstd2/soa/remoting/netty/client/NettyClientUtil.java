@@ -1,6 +1,6 @@
 package com.tstd2.soa.remoting.netty.client;
 
-import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.config.ProtocolBean;
 import com.tstd2.soa.remoting.netty.MessageCodecConstant;
 import com.tstd2.soa.remoting.netty.serialize.RpcSerializeFrame;
 import io.netty.bootstrap.Bootstrap;
@@ -21,7 +21,7 @@ public class NettyClientUtil {
     /**
      * 利用管道发送消息
      */
-    public static void writeAndFlush(Protocol protocol, Object request) throws Exception {
+    public static void writeAndFlush(ProtocolBean protocol, Object request) throws Exception {
 
         if (nettyChannelPool == null) {
             synchronized (NettyClientUtil.class) {
@@ -34,7 +34,7 @@ public class NettyClientUtil {
         Channel channel = nettyChannelPool.syncGetChannel(protocol, new NettyChannelPool.ConnectCall() {
 
             @Override
-            public Channel connect(Protocol protocol) throws Exception {
+            public Channel connect(ProtocolBean protocol) throws Exception {
                 return connectToServer(protocol);
             }
         });
@@ -50,7 +50,7 @@ public class NettyClientUtil {
     /**
      * 连接服务端
      */
-    private static Channel connectToServer(final Protocol protocol) throws InterruptedException {
+    private static Channel connectToServer(final ProtocolBean protocol) throws InterruptedException {
         // 异步调用
         // 基于NIO的非阻塞实现并行调用，客户端不需要启动多线程即可完成并行调用多个远程服务，相对多线程开销较小
         // 构建RpcProxyHandler异步处理响应的Handler

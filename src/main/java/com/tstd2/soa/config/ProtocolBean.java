@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-public class Protocol extends BaseConfigBean implements ApplicationContextAware, ApplicationListener<ContextRefreshedEvent> {
+public class ProtocolBean extends BaseConfigBean implements ApplicationContextAware, ApplicationListener<ContextRefreshedEvent> {
 
     private static final long serialVersionUID = 7082032188443659845L;
 
@@ -80,7 +80,7 @@ public class Protocol extends BaseConfigBean implements ApplicationContextAware,
             return;
         }
 
-        final Protocol protocol = this;
+        final ProtocolBean protocol = this;
 
         if ("netty".equals(name)) {
             new Thread(new Runnable() {

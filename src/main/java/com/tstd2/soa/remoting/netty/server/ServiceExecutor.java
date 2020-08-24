@@ -1,10 +1,9 @@
 package com.tstd2.soa.remoting.netty.server;
 
 import com.tstd2.soa.common.ThreadPoolFactory;
-import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.config.ProtocolBean;
 
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 业务方法执行器
@@ -13,7 +12,7 @@ public class ServiceExecutor {
 
     private volatile static ExecutorService threadPool;
 
-    public static void submit(Callable<Object> call, int threads, Protocol protocol) {
+    public static void submit(Callable<Object> call, int threads, ProtocolBean protocol) {
 
         if (threadPool == null) {
             synchronized (ServiceExecutor.class) {

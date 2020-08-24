@@ -1,5 +1,6 @@
 package com.tstd2.soa.config.spring.annotation;
 
+import com.tstd2.soa.config.ReferenceBean;
 import com.tstd2.soa.config.annotation.Reference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -65,7 +66,7 @@ public class ReferenceAnnotationBeanPostProcessor extends InstantiationAwareBean
 
         private final Reference reference;
 
-        private volatile com.tstd2.soa.config.Reference referenceBean;
+        private volatile ReferenceBean referenceBean;
 
 
         protected AnnotatedFieldElement(Field field, Reference reference) {
@@ -84,8 +85,8 @@ public class ReferenceAnnotationBeanPostProcessor extends InstantiationAwareBean
             field.set(bean, referenceBean.getObject());
         }
 
-        private com.tstd2.soa.config.Reference buildReferenceBean(Reference reference, Class<?> referenceClass) {
-            com.tstd2.soa.config.Reference referenceBean = new com.tstd2.soa.config.Reference();
+        private ReferenceBean buildReferenceBean(Reference reference, Class<?> referenceClass) throws Exception {
+            ReferenceBean referenceBean = new ReferenceBean();
             referenceBean.setApplicationContext(applicationContext);
             referenceBean.setInf(referenceClass.getName());
             referenceBean.setLoadbalance(StringUtils.isBlank(reference.loadbalance()) ? "random" : reference.loadbalance());
@@ -94,6 +95,7 @@ public class ReferenceAnnotationBeanPostProcessor extends InstantiationAwareBean
             referenceBean.setProxy(StringUtils.isBlank(reference.proxy()) ? "javassist" : reference.proxy());
             referenceBean.setRetries(StringUtils.isBlank(reference.retries()) ? "1" : reference.retries());
             referenceBean.setTimeout(String.valueOf(reference.timeout()));
+            referenceBean.afterPropertiesSet();
             return referenceBean;
         }
     }

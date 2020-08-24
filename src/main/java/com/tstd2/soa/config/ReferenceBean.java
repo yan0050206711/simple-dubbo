@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Reference extends BaseConfigBean implements ApplicationContextAware, FactoryBean, InitializingBean {
+public class ReferenceBean extends BaseConfigBean implements ApplicationContextAware, FactoryBean, InitializingBean {
 
     private static final long serialVersionUID = 8473037023470434275L;
 
@@ -143,7 +143,7 @@ public class Reference extends BaseConfigBean implements ApplicationContextAware
     }
 
     public static void setInvokes(Map<String, Invoke> invokes) {
-        Reference.invokes = invokes;
+        ReferenceBean.invokes = invokes;
     }
 
     public static Map<String, LoadBalance> getLoadBalances() {
@@ -151,7 +151,7 @@ public class Reference extends BaseConfigBean implements ApplicationContextAware
     }
 
     public static void setLoadBalances(Map<String, LoadBalance> loadBalances) {
-        Reference.loadBalances = loadBalances;
+        ReferenceBean.loadBalances = loadBalances;
     }
 
     public static Map<String, Cluster> getClusters() {
@@ -159,7 +159,7 @@ public class Reference extends BaseConfigBean implements ApplicationContextAware
     }
 
     public static void setClusters(Map<String, Cluster> clusters) {
-        Reference.clusters = clusters;
+        ReferenceBean.clusters = clusters;
     }
 
     public static long getSerialVersionUID() {
@@ -183,7 +183,7 @@ public class Reference extends BaseConfigBean implements ApplicationContextAware
         if (protocol != null && !"".equals(protocol)) {
             invoke = invokes.get(protocol);
         } else {
-            Protocol prot = SpringContextHolder.getBean(Protocol.class);
+            ProtocolBean prot = SpringContextHolder.getBean(ProtocolBean.class);
             if (prot != null) {
                 invoke = invokes.get(prot.getName());
             } else {

@@ -1,6 +1,6 @@
 package com.tstd2.soa.remoting.netty.server;
 
-import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.config.ProtocolBean;
 import com.tstd2.soa.remoting.netty.MessageCodecConstant;
 import com.tstd2.soa.remoting.netty.serialize.RpcSerializeFrame;
 import io.netty.bootstrap.ServerBootstrap;
@@ -21,7 +21,7 @@ public class NettyServer {
     /**
      * 启动netty服务
      */
-    public static void start(final Protocol protocol) throws Exception {
+    public static void start(final ProtocolBean protocol) throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
         try {

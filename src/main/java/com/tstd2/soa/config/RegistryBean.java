@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationContextAware;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Registry extends BaseConfigBean implements ApplicationContextAware {
+public class RegistryBean extends BaseConfigBean implements ApplicationContextAware {
 
     private static final long serialVersionUID = 6931270359014167547L;
 
@@ -46,7 +46,7 @@ public class Registry extends BaseConfigBean implements ApplicationContextAware 
     }
 
     public static void setRegistryMap(Map<String, BaseRegistry> registryMap) {
-        Registry.registryMap = registryMap;
+        RegistryBean.registryMap = registryMap;
     }
 
     @Override

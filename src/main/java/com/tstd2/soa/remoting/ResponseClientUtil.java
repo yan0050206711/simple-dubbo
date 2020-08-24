@@ -6,7 +6,12 @@ import com.tstd2.soa.config.SpringContextHolder;
 import com.tstd2.soa.remoting.exchange.model.Request;
 import com.tstd2.soa.remoting.exchange.model.Response;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class ResponseClientUtil {
+
+    private static Implementation implementation = new Implementation();
 
     public static Response response(Request request, Response response) {
         // 取出request对应sessionId
@@ -27,8 +32,7 @@ public class ResponseClientUtil {
 
     private static Object reflect(Request request) throws Exception {
         // 从spring服务实例对象
-        Class<?> clazz = ReflectionCache.putAndGetClass(request.getClassName());
-        Object serviceBean = SpringContextHolder.getBean(clazz);
+        Object serviceBean = implementation.getImplementation(request.getClassName());
 
         // 代理对象里面方法名称和方法参数
 //        Method method = clazz.getMethod(request.getMethodName(), request.getParametersType());
@@ -42,6 +46,35 @@ public class ResponseClientUtil {
         Object result = methodAccess.invoke(serviceBean, methodIndex, request.getParametersValue());
 
         return result;
+    }
+
+    private static class Implementation {
+        private Map<Class<?>, Object> implementationCache = new ConcurrentHashMap<>();
+
+        public Object getImplementation(String service) {
+            try {
+                Class<?> clazz = ReflectionCache.putAndGetClass(service);
+                Object serviceBean = null;
+                try {
+                    serviceBean = SpringContextHolder.getBean(clazz);
+                } catch (Exception e) {
+                }
+                if (serviceBean == null) {
+                    serviceBean = implementationCache.get(clazz);
+                    if (serviceBean == null) {
+                        String impl = service + "Impl";
+                        Class<?> cl = ReflectionCache.putAndGetClass(impl);
+                        serviceBean = cl.newInstance();
+                        implementationCache.put(clazz, serviceBean);
+                    }
+                }
+                return serviceBean;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
     }
 
 }

@@ -1,6 +1,6 @@
 package com.tstd2.soa.rpc.invoke;
 
-import com.tstd2.soa.config.Reference;
+import com.tstd2.soa.config.ReferenceBean;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -11,7 +11,7 @@ public class Invocation implements Serializable {
     private Method method;
     private Object[] objs;
     private Invoke invoke;
-    private Reference reference;
+    private ReferenceBean reference;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -41,11 +41,11 @@ public class Invocation implements Serializable {
         this.invoke = invoke;
     }
 
-    public Reference getReference() {
+    public ReferenceBean getReference() {
         return reference;
     }
 
-    public void setReference(Reference reference) {
+    public void setReference(ReferenceBean reference) {
         this.reference = reference;
     }
 

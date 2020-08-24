@@ -1,6 +1,7 @@
 package com.tstd2.soa.config.spring.annotation;
 
 import com.tstd2.soa.common.ClassScanner;
+import com.tstd2.soa.config.ServiceBean;
 import com.tstd2.soa.config.annotation.Service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -79,7 +80,7 @@ public class ServiceAnnotationBeanPostProcessor implements BeanDefinitionRegistr
     private AbstractBeanDefinition buildServiceBeanDefinition(Service service, Class<?> interfaceClass,
                                                               String annotatedServiceBeanName) {
 
-        BeanDefinitionBuilder builder = rootBeanDefinition(com.tstd2.soa.config.Service.class);
+        BeanDefinitionBuilder builder = rootBeanDefinition(ServiceBean.class);
         AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
 
         String interfaceName = service.interfaceName();
