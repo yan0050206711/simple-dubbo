@@ -10,14 +10,19 @@ public class ServiceConfig {
 
     private String interfaceName;
 
+    protected boolean export;
+
     /**
      * 将服务发布
      */
     public void export() {
-        /**
-         * 将本service注册到注册中心
-         */
-        BaseRegistryDelegate.registry(getInterfaceName());
+        if (!export) {
+            /**
+             * 将本service注册到注册中心
+             */
+            BaseRegistryDelegate.registry(getInterfaceName());
+            export = true;
+        }
     }
 
     public String getInterfaceName() {

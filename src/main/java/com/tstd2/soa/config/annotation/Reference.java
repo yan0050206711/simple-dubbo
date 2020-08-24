@@ -1,7 +1,5 @@
 package com.tstd2.soa.config.annotation;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -17,7 +15,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Inherited
-@Autowired
 public @interface Reference {
     String loadbalance() default "";
 

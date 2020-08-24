@@ -19,4 +19,6 @@
 
     <soa:annotation package="com.tstd2.soa.annotation" />
 
+    <soa:protocol port="9000" threads="200" serialize="hession2" />
+
 </beans>

@@ -1,8 +1,12 @@
 package com.tstd2.soa.config.spring.schema;
 
+import com.tstd2.soa.common.StringUtils;
+import com.tstd2.soa.config.spring.annotation.ReferenceAnnotationBeanPostProcessor;
 import com.tstd2.soa.config.spring.annotation.ServiceAnnotationBeanPostProcessor;
+import com.tstd2.soa.config.spring.util.BeanRegistrar;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
@@ -28,8 +32,14 @@ public class AnnotationBeanDefinitionParser extends AbstractSingleBeanDefinition
         builder.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 
         // Registers ReferenceAnnotationBeanPostProcessor
-//        registerReferenceAnnotationBeanPostProcessor(parserContext.getRegistry());
+        registerReferenceAnnotationBeanPostProcessor(parserContext.getRegistry());
+    }
 
+    private void registerReferenceAnnotationBeanPostProcessor(BeanDefinitionRegistry registry) {
+
+        // Register @Reference Annotation Bean Processor
+        BeanRegistrar.registerInfrastructureBean(registry,
+                StringUtils.lowerFirstCapse(ReferenceAnnotationBeanPostProcessor.class.getName()), ReferenceAnnotationBeanPostProcessor.class);
 
     }
 
