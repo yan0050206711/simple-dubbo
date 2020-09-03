@@ -1,13 +1,10 @@
 package com.tstd2.soa.config;
 
-import com.tstd2.soa.remoting.netty.server.NettyServer;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 
-public class ProtocolBean extends BaseConfigBean implements ApplicationContextAware, ApplicationListener<ContextRefreshedEvent> {
+public class ProtocolBean extends BaseConfigBean implements ApplicationContextAware {
 
     private static final long serialVersionUID = 7082032188443659845L;
 
@@ -68,33 +65,6 @@ public class ProtocolBean extends BaseConfigBean implements ApplicationContextAw
 
     public void setSerialize(String serialize) {
         this.serialize = serialize;
-    }
-
-    /**
-     * spring启动完成以后触发的事件
-     * @param event
-     */
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (!ContextRefreshedEvent.class.getName().equals(event.getClass().getName())) {
-            return;
-        }
-
-        final ProtocolBean protocol = this;
-
-        if ("netty".equals(name)) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        NettyServer.start(protocol);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        }
-
     }
 
     @Override
