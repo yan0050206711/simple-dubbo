@@ -5,17 +5,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ResponseHolder {
 
-    private static Map<Long, ResponseFuture> responseMap = new ConcurrentHashMap<>();
+    private static Map<Long, DefaultFuture> responseMap = new ConcurrentHashMap<>();
 
-    public static void put(Long key, ResponseFuture future) {
+    public static void put(Long key, DefaultFuture future) {
         responseMap.put(key, future);
     }
 
-    public static ResponseFuture get(Long key) {
+    public static DefaultFuture get(Long key) {
         return responseMap.get(key);
     }
 
-    public static ResponseFuture remove(Long key) {
+    public static DefaultFuture remove(Long key) {
         return responseMap.remove(key);
     }
 }

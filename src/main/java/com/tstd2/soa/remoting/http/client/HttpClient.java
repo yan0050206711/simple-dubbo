@@ -1,7 +1,7 @@
 package com.tstd2.soa.remoting.http.client;
 
 import com.tstd2.soa.common.serialize.hessian.HessianCodecUtil;
-import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.config.ProtocolBean;
 import com.tstd2.soa.remoting.exchange.model.Request;
 import com.tstd2.soa.remoting.exchange.model.Response;
 import org.springframework.util.Base64Utils;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class HttpClient {
 
-    public static Object request(Protocol protocol, Request request, int timeout) throws IOException {
+    public static Object request(ProtocolBean protocol, Request request, int timeout) throws IOException {
 
         // 请求url
         String url = "http://" + protocol.getHost() + ":" + protocol.getPort() + protocol.getContextpath();

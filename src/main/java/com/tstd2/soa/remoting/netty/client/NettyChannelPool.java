@@ -1,10 +1,9 @@
 package com.tstd2.soa.remoting.netty.client;
 
-import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.config.ProtocolBean;
 import io.netty.channel.Channel;
 
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -25,7 +24,7 @@ public class NettyChannelPool {
     /**
      * 同步获取netty channel
      */
-    public Channel syncGetChannel(Protocol protocol, ConnectCall call) throws Exception {
+    public Channel syncGetChannel(ProtocolBean protocol, ConnectCall call) throws Exception {
 
         // 取出对应ip port的channel
         String host = protocol.getHost() + ":" + protocol.getPort();
@@ -64,7 +63,7 @@ public class NettyChannelPool {
     }
 
     public interface ConnectCall {
-        Channel connect(Protocol protocol) throws Exception;
+        Channel connect(ProtocolBean protocol) throws Exception;
     }
 
 }

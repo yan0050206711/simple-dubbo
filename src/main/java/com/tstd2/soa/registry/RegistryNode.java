@@ -1,26 +1,26 @@
 package com.tstd2.soa.registry;
 
-import com.tstd2.soa.config.Protocol;
-import com.tstd2.soa.config.Service;
+import com.tstd2.soa.config.ProtocolBean;
+import com.tstd2.soa.config.ServiceBean;
 
 public class RegistryNode {
 
-    private Protocol protocol;
-    private Service service;
+    private ProtocolBean protocol;
+    private ServiceBean service;
 
-    public Protocol getProtocol() {
+    public ProtocolBean getProtocol() {
         return protocol;
     }
 
-    public void setProtocol(Protocol protocol) {
+    public void setProtocol(ProtocolBean protocol) {
         this.protocol = protocol;
     }
 
-    public Service getService() {
+    public ServiceBean getService() {
         return service;
     }
 
-    public void setService(Service service) {
+    public void setService(ServiceBean service) {
         this.service = service;
     }
 }

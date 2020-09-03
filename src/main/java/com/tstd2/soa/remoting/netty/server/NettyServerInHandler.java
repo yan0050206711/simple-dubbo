@@ -1,6 +1,6 @@
 package com.tstd2.soa.remoting.netty.server;
 
-import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.config.ProtocolBean;
 import com.tstd2.soa.config.SpringContextHolder;
 import com.tstd2.soa.remoting.exchange.model.Request;
 import com.tstd2.soa.remoting.exchange.model.Response;
@@ -17,7 +17,7 @@ public class NettyServerInHandler extends ChannelInboundHandlerAdapter {
 
         // 从spring服务实例对象
         // 拿到服务端协议配置
-        Protocol protocol = SpringContextHolder.getBean(Protocol.class);
+        ProtocolBean protocol = SpringContextHolder.getBean(ProtocolBean.class);
 
         int threads = Integer.parseInt(protocol.getThreads());
 

@@ -1,9 +1,9 @@
 package com.tstd2.soa.registry.redis;
 
 import com.tstd2.soa.common.JsonUtils;
-import com.tstd2.soa.config.Protocol;
-import com.tstd2.soa.config.Registry;
-import com.tstd2.soa.config.Service;
+import com.tstd2.soa.config.ProtocolBean;
+import com.tstd2.soa.config.RegistryBean;
+import com.tstd2.soa.config.ServiceBean;
 import com.tstd2.soa.config.SpringContextHolder;
 import com.tstd2.soa.registry.BaseRegistry;
 import com.tstd2.soa.registry.RegistryNode;
@@ -23,11 +23,11 @@ public class RedisRegistry implements BaseRegistry {
     @Override
     public boolean registry(String interfaceName) {
         try {
-            Protocol protocol = SpringContextHolder.getBean(Protocol.class);
+            ProtocolBean protocol = SpringContextHolder.getBean(ProtocolBean.class);
 //            Map<String, Service> services = application.getBeansOfType(Service.class);
-            Service service = SpringContextHolder.getBean("Service-" + interfaceName, Service.class);
+            ServiceBean service = SpringContextHolder.getBean("Service-" + interfaceName, ServiceBean.class);
 
-            Registry registry = SpringContextHolder.getBean(Registry.class);
+            RegistryBean registry = SpringContextHolder.getBean(RegistryBean.class);
             this.createRedisPool(registry.getAddress());
 
             RegistryNode node = new RegistryNode();
@@ -102,7 +102,7 @@ public class RedisRegistry implements BaseRegistry {
 
     @Override
     public List<RegistryNode> getRegistry(String interfaceName) {
-        Registry registry = SpringContextHolder.getBean(Registry.class);
+        RegistryBean registry = SpringContextHolder.getBean(RegistryBean.class);
         this.createRedisPool(registry.getAddress());
         if (this.redisClient.exists(interfaceName)) {
             Set<String> set = this.redisClient.smembers(interfaceName);

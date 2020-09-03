@@ -1,7 +1,7 @@
 package com.tstd2.soa.remoting.http.server;
 
 import com.tstd2.soa.common.ThreadPoolFactory;
-import com.tstd2.soa.config.Protocol;
+import com.tstd2.soa.config.ProtocolBean;
 import com.tstd2.soa.config.SpringContextHolder;
 
 import javax.servlet.ServletContextEvent;
@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class ApplicationListener implements ServletContextListener {
 
     // 拿到服务端协议配置
-    private Protocol protocol = SpringContextHolder.getBean(Protocol.class);
+    private ProtocolBean protocol = SpringContextHolder.getBean(ProtocolBean.class);
 
     int threads = Integer.parseInt(protocol.getThreads());
 
