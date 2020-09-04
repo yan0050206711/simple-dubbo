@@ -6,5 +6,5 @@ package com.tstd2.soa.annotation.service;
  */
 public interface HelloService {
 
-    void hello(String name);
+    String hello(String name);
 }

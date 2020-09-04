@@ -3,6 +3,9 @@ package com.tstd2.soa.remoting.netty.client;
 import com.tstd2.soa.config.ProtocolBean;
 import com.tstd2.soa.remoting.exchange.DefaultFuture;
 import com.tstd2.soa.remoting.exchange.model.Request;
+import com.tstd2.soa.rpc.RpcContext;
+
+import java.util.concurrent.TimeUnit;
 
 public class NettyClient {
 
@@ -17,12 +20,18 @@ public class NettyClient {
         try {
             NettyClientUtil.writeAndFlush(protocol, request);
         } catch (Exception e) {
-            future.cancel();
+            future.cancel(true);
+            future.completeExceptionally(e);
             throw e;
         }
 
-        return future.get(timeout);
-
+        boolean isAsync = RpcContext.getContext().isAsync();
+        if (isAsync) {
+            RpcContext.getContext().setFuture(future);
+            return null;
+        } else {
+            return future.get(timeout, TimeUnit.MILLISECONDS);
+        }
     }
 
 }

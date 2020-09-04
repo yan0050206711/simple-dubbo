@@ -1,10 +1,11 @@
 package com.tstd2.soa.remoting.exchange;
 
-
 import com.tstd2.soa.remoting.ErrorCode;
 import com.tstd2.soa.remoting.exchange.model.Request;
 import com.tstd2.soa.remoting.exchange.model.Response;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Condition;
@@ -14,13 +15,14 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Rpc消息回调
  */
-public class DefaultFuture implements ResponseFuture {
+public class DefaultFuture extends CompletableFuture implements ResponseFuture {
 
     private final int DEFAULT_TIMEOUT = 3000;
     private Request request;
     private volatile Response response;
     private Lock lock = new ReentrantLock();
     private Condition finish = lock.newCondition();
+    private volatile boolean cancelled;
 
     public DefaultFuture(Request request) {
         this.request = request;
@@ -28,12 +30,16 @@ public class DefaultFuture implements ResponseFuture {
     }
 
     @Override
-    public Object get() throws Exception {
-        return this.get(DEFAULT_TIMEOUT);
+    public Object get() throws InterruptedException, ExecutionException {
+        try {
+            return this.get(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            throw new ExecutionException(e);
+        }
     }
 
     @Override
-    public Object get(int timeout) throws Exception {
+    public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         try {
             lock.lock();
             if (this.isDone()) {
@@ -41,7 +47,7 @@ public class DefaultFuture implements ResponseFuture {
             }
 
             // 超时设置
-            finish.await(timeout, TimeUnit.MILLISECONDS);
+            finish.await(timeout, unit);
 
             if (this.isDone()) {
                 return this.returnFromResponse();
@@ -65,6 +71,21 @@ public class DefaultFuture implements ResponseFuture {
         }
     }
 
+    @Override
+    public boolean complete(Object value) {
+        if (value instanceof Response) {
+            this.received((Response) value);
+            return super.complete(returnFromResponse());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
     public boolean isDone() {
         return this.response != null;
     }
@@ -81,16 +102,19 @@ public class DefaultFuture implements ResponseFuture {
         throw new RuntimeException(response.getErrorMsg());
     }
 
-    public void cancel() {
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
         Response errorResult = new Response();
         errorResult.setSessionId(request.getSessionId());
         errorResult.setErrorMsg("request future has been canceled.");
         errorResult.setResultCode(ErrorCode.ERROR.errorCode);
         response = errorResult;
         ResponseHolder.remove(request.getSessionId());
+        cancelled = true;
+        return true;
     }
 
-    private String getTimeoutMessage(int timeout) {
+    private String getTimeoutMessage(long timeout) {
         StringBuilder builder = new StringBuilder();
         for (Class<?> type : request.getParametersType()) {
             builder.append(type.getName()).append(",");

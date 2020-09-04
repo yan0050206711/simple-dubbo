@@ -17,7 +17,7 @@ public class NettyClientInHandler extends ChannelInboundHandlerAdapter {
 
         DefaultFuture future = ResponseHolder.remove(sessionId);
         if (future != null) {
-            future.received(response);
+            future.complete(response);
         }
     }
 

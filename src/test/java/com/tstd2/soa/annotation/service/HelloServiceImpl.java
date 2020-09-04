@@ -10,7 +10,8 @@ import com.tstd2.soa.config.annotation.Service;
 public class HelloServiceImpl implements HelloService {
 
     @Override
-    public void hello(String name) {
+    public String hello(String name) {
         System.out.println("hello " + name);
+        return "hello " + name;
     }
 }
