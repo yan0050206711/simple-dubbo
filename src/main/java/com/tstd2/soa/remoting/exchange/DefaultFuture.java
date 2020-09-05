@@ -74,7 +74,7 @@ public class DefaultFuture extends CompletableFuture implements ResponseFuture {
     @Override
     public boolean complete(Object value) {
         if (value instanceof Response) {
-            this.received((Response) value);
+            this.response = (Response) value;
             return super.complete(returnFromResponse());
         }
         return false;
