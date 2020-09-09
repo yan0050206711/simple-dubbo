@@ -23,9 +23,11 @@ public class DefaultFuture extends CompletableFuture implements ResponseFuture {
     private Lock lock = new ReentrantLock();
     private Condition finish = lock.newCondition();
     private volatile boolean cancelled;
+    private boolean isAsync;
 
-    public DefaultFuture(Request request) {
+    public DefaultFuture(Request request, boolean isAsync) {
         this.request = request;
+        this.isAsync = isAsync;
         ResponseHolder.put(request.getSessionId(), this);
     }
 
@@ -74,9 +76,15 @@ public class DefaultFuture extends CompletableFuture implements ResponseFuture {
     @Override
     public boolean complete(Object value) {
         if (value instanceof Response) {
-            this.response = (Response) value;
-            return super.complete(returnFromResponse());
+            if (isAsync) {
+                this.response = (Response) value;
+                return super.complete(returnFromResponse());
+            } else {
+                this.received((Response) value);
+                return true;
+            }
         }
+
         return false;
     }
 

@@ -14,8 +14,10 @@ public class NettyClient {
      */
     public static Object request(ProtocolBean protocol, Request request, int timeout) throws Exception {
 
+        boolean isAsync = RpcContext.getContext().isAsync();
+
         // 通过netty传输管道直接拿到响应结果
-        DefaultFuture future = new DefaultFuture(request);
+        DefaultFuture future = new DefaultFuture(request, isAsync);
 
         try {
             NettyClientUtil.writeAndFlush(protocol, request);
@@ -25,7 +27,6 @@ public class NettyClient {
             throw e;
         }
 
-        boolean isAsync = RpcContext.getContext().isAsync();
         if (isAsync) {
             RpcContext.getContext().setFuture(future);
             return null;
