@@ -1,9 +1,7 @@
 package com.tstd2.soa.registry.zookeeper;
 
 import com.tstd2.soa.common.JsonUtils;
-import com.tstd2.soa.config.ProtocolBean;
 import com.tstd2.soa.config.RegistryBean;
-import com.tstd2.soa.config.ServiceBean;
 import com.tstd2.soa.config.SpringContextHolder;
 import com.tstd2.soa.registry.BaseRegistry;
 import com.tstd2.soa.registry.RegistryNode;
@@ -29,20 +27,13 @@ public class ZookeeperRegistry implements BaseRegistry {
     private static final String BASE_PATH = "/simple_dubbo";
 
     @Override
-    public boolean registry(String interfaceName) {
+    public boolean registry(String interfaceName, RegistryNode registryNode) {
         try {
-            ProtocolBean protocol = SpringContextHolder.getBean(ProtocolBean.class);
-            ServiceBean service = SpringContextHolder.getBean("Service-" + interfaceName, ServiceBean.class);
-
             RegistryBean registry = SpringContextHolder.getBean(RegistryBean.class);
             this.createZk(registry.getAddress());
 
-            RegistryNode node = new RegistryNode();
-            node.setProtocol(protocol);
-            node.setService(service);
-
             // 更新zk
-            this.sadd(interfaceName, node);
+            this.sadd(interfaceName, registryNode);
 
             return true;
         } catch (Exception e) {

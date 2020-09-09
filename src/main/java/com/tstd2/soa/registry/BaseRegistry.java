@@ -10,9 +10,10 @@ public interface BaseRegistry {
      * 注册服务
      *
      * @param interfaceName
+     * @param registryNode
      * @return
      */
-    boolean registry(String interfaceName);
+    boolean registry(String interfaceName, RegistryNode registryNode);
 
     /**
      * 取消注册

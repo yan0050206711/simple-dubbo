@@ -1,18 +1,33 @@
 package com.tstd2.soa.registry;
 
+import com.tstd2.soa.config.ProtocolBean;
 import com.tstd2.soa.config.RegistryBean;
+import com.tstd2.soa.config.ServiceBean;
 import com.tstd2.soa.config.SpringContextHolder;
 import com.tstd2.soa.registry.support.RegistryListener;
+import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
 public class BaseRegistryDelegate {
 
     public static void registry(String interfaceName) {
+        ProtocolBean protocolBean = SpringContextHolder.getBean(ProtocolBean.class);
+        ServiceBean serviceBean = SpringContextHolder.getBean("Service-" + interfaceName, ServiceBean.class);
+
         RegistryBean registry = SpringContextHolder.getBean(RegistryBean.class);
         String protocol = registry.getProtocol();
         BaseRegistry registryBean = registry.getRegistryMap().get(protocol);
-        registryBean.registry(interfaceName);
+
+        RegistryNode node = new RegistryNode();
+        RegistryNode.ProtocolUrl protocolUrl = new RegistryNode.ProtocolUrl();
+        BeanUtils.copyProperties(protocolBean, protocolUrl);
+        RegistryNode.ServiceUrl serviceUrl = new RegistryNode.ServiceUrl();
+        BeanUtils.copyProperties(serviceBean, serviceUrl);
+        node.setProtocol(protocolUrl);
+        node.setService(serviceUrl);
+
+        registryBean.registry(interfaceName, node);
     }
 
     public static List<RegistryNode> getRegistry(String interfaceName) {
