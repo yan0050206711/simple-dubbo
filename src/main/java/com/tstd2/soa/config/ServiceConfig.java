@@ -32,9 +32,15 @@ public class ServiceConfig {
             if ("netty".equals(protocolBean.getName())) {
                 Server server = SERVER_MAP.get(protocolBean.getPort());
                 if (server == null) {
-                    server = new NettyServer(Integer.parseInt(protocolBean.getPort()), protocolBean.getSerialize());
-                    Server finalServer = server;
-                    new Thread(() -> finalServer.doOpen()).start();
+                    synchronized (this) {
+                        server = SERVER_MAP.get(protocolBean.getPort());
+                        if (server == null) {
+                            server = new NettyServer(Integer.parseInt(protocolBean.getPort()), protocolBean.getSerialize());
+                            SERVER_MAP.put(protocolBean.getPort(), server);
+                            Server finalServer = server;
+                            new Thread(() -> finalServer.doOpen()).start();
+                        }
+                    }
                 }
             }
 
