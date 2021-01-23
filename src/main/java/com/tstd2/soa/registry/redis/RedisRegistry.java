@@ -6,6 +6,7 @@ import com.tstd2.soa.config.SpringContextHolder;
 import com.tstd2.soa.registry.BaseRegistry;
 import com.tstd2.soa.registry.RegistryNode;
 import com.tstd2.soa.registry.support.NotifyListener;
+import redis.clients.jedis.JedisPubSub;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ public class RedisRegistry implements BaseRegistry {
 
     private RedisClient redisClient;
 
+    private String channel = "redis-registry";
+
     @Override
     public boolean registry(String interfaceName, RegistryNode registryNode) {
         try {
@@ -28,7 +31,7 @@ public class RedisRegistry implements BaseRegistry {
             this.sadd(interfaceName, registryNode);
 
             // 发出通知
-            this.redisClient.publish("redis-registry", interfaceName);
+            this.redisClient.publish(channel, interfaceName);
 
             return true;
         } catch (Exception e) {
@@ -44,7 +47,22 @@ public class RedisRegistry implements BaseRegistry {
 
     @Override
     public void subscribe(String interfaceName, NotifyListener listener) {
+        this.redisClient.subscribe(new JedisPubSub() {
+            @Override
+            public void onMessage(String channel, String message) {
+                listener.notify(getRegistry(interfaceName));
+            }
 
+            @Override
+            public void onSubscribe(String channel, int subscribedChannels) {
+                listener.notify(getRegistry(interfaceName));
+            }
+
+            @Override
+            public void onUnsubscribe(String channel, int subscribedChannels) {
+                listener.notify(getRegistry(interfaceName));
+            }
+        });
     }
 
     @Override
