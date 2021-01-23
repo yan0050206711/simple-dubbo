@@ -3,15 +3,16 @@ package com.tstd2.soa.common;
 import com.esotericsoftware.reflectasm.MethodAccess;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.StringJoiner;
-import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ReflectionCache {
 
-    private static WeakHashMap<String, Class<?>> CLASS_CACHE = new WeakHashMap<>();
-    private static WeakHashMap<String, Method> METHOD_CACHE = new WeakHashMap<>();
-    private static WeakHashMap<String, MethodAccess> METHOD_ACCESS_CACHE = new WeakHashMap<>();
-    private static WeakHashMap<String, Integer> METHOD_INDEX_CACHE = new WeakHashMap<>();
+    private static Map<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
+    private static Map<String, Method> METHOD_CACHE = new ConcurrentHashMap<>();
+    private static Map<String, MethodAccess> METHOD_ACCESS_CACHE = new ConcurrentHashMap<>();
+    private static Map<String, Integer> METHOD_INDEX_CACHE = new ConcurrentHashMap<>();
 
     public static void putClass(String className, Class<?> targetClass) {
         CLASS_CACHE.put(className, targetClass);
