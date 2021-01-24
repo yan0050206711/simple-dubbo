@@ -10,7 +10,7 @@ public class Invocation implements Serializable {
 
     private Method method;
     private Object[] objs;
-    private Invoke invoke;
+    private Invoker invoke;
     private ReferenceBean reference;
 
     public static long getSerialVersionUID() {
@@ -33,11 +33,11 @@ public class Invocation implements Serializable {
         this.objs = objs;
     }
 
-    public Invoke getInvoke() {
+    public Invoker getInvoke() {
         return invoke;
     }
 
-    public void setInvoke(Invoke invoke) {
+    public void setInvoke(Invoker invoke) {
         this.invoke = invoke;
     }
 

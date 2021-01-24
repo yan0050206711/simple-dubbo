@@ -8,12 +8,13 @@ import com.tstd2.soa.rpc.cluster.Cluster;
 import com.tstd2.soa.rpc.cluster.FailfastClusterInvoke;
 import com.tstd2.soa.rpc.cluster.FailoverClusterInvoke;
 import com.tstd2.soa.rpc.cluster.FailsafeClusterInvoke;
-import com.tstd2.soa.rpc.invoke.HttpInvoke;
-import com.tstd2.soa.rpc.invoke.Invoke;
-import com.tstd2.soa.rpc.invoke.NettyInvoke;
+import com.tstd2.soa.rpc.invoke.HttpInvoker;
+import com.tstd2.soa.rpc.invoke.Invoker;
+import com.tstd2.soa.rpc.invoke.NettyInvoker;
 import com.tstd2.soa.rpc.loadbalance.LoadBalance;
 import com.tstd2.soa.rpc.loadbalance.RandomLoadBalance;
 import com.tstd2.soa.rpc.loadbalance.RoundrobinLoadBalance;
+import com.tstd2.soa.rpc.protocol.ProtocolFilterWrapper;
 import com.tstd2.soa.rpc.proxy.RpcProxy;
 import com.tstd2.soa.rpc.proxy.javassist.JavassistProxy;
 import com.tstd2.soa.rpc.proxy.jdk.JdkProxy;
@@ -50,7 +51,7 @@ public class ReferenceBean extends BaseConfigBean implements ApplicationContextA
     /**
      * 调用者
      */
-    private static Map<String, Invoke> invokes = new HashMap<>();
+    private static Map<String, Invoker> invokes = new HashMap<>();
 
     /**
      * 负载策略
@@ -68,8 +69,8 @@ public class ReferenceBean extends BaseConfigBean implements ApplicationContextA
     private static Map<String, RpcProxy> proxys = new HashMap<>();
 
     static {
-        invokes.put("netty", new NettyInvoke());
-        invokes.put("http", new HttpInvoke());
+        invokes.put("netty", new NettyInvoker());
+        invokes.put("http", new HttpInvoker());
 
         loadBalances.put("random", new RandomLoadBalance());
         loadBalances.put("roundrob", new RoundrobinLoadBalance());
@@ -138,11 +139,11 @@ public class ReferenceBean extends BaseConfigBean implements ApplicationContextA
         this.proxy = proxy;
     }
 
-    public static Map<String, Invoke> getInvokes() {
+    public static Map<String, Invoker> getInvokes() {
         return invokes;
     }
 
-    public static void setInvokes(Map<String, Invoke> invokes) {
+    public static void setInvokes(Map<String, Invoker> invokes) {
         ReferenceBean.invokes = invokes;
     }
 
@@ -179,20 +180,22 @@ public class ReferenceBean extends BaseConfigBean implements ApplicationContextA
      */
     @Override
     public Object getObject() throws Exception {
-        Invoke invoke;
+        Invoker invoker;
         if (protocol != null && !"".equals(protocol)) {
-            invoke = invokes.get(protocol);
+            invoker = invokes.get(protocol);
         } else {
             ProtocolBean prot = SpringContextHolder.getBean(ProtocolBean.class);
             if (prot != null) {
-                invoke = invokes.get(prot.getName());
+                invoker = invokes.get(prot.getName());
             } else {
                 throw new RuntimeException("Protocol is null");
             }
         }
 
+        invoker = new ProtocolFilterWrapper().refer(getObjectType(), invoker);
+
         // 生成一个代理对象
-        return proxys.get(proxy).getObject(inf, invoke, this);
+        return proxys.get(proxy).getObject(inf, invoker, this);
     }
 
     /**

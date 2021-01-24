@@ -3,17 +3,17 @@ package com.tstd2.soa.rpc.proxy;
 import com.tstd2.soa.rpc.cluster.Cluster;
 import com.tstd2.soa.config.ReferenceBean;
 import com.tstd2.soa.rpc.invoke.Invocation;
-import com.tstd2.soa.rpc.invoke.Invoke;
+import com.tstd2.soa.rpc.invoke.Invoker;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 public class InvokeInvocationHandler implements InvocationHandler {
 
-    private Invoke invoke;
+    private Invoker invoke;
     private ReferenceBean reference;
 
-    public InvokeInvocationHandler(Invoke invoke, ReferenceBean reference) {
+    public InvokeInvocationHandler(Invoker invoke, ReferenceBean reference) {
         this.invoke = invoke;
         this.reference = reference;
     }

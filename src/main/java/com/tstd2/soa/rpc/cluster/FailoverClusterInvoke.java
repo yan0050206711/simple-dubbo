@@ -1,7 +1,7 @@
 package com.tstd2.soa.rpc.cluster;
 
 import com.tstd2.soa.rpc.invoke.Invocation;
-import com.tstd2.soa.rpc.invoke.Invoke;
+import com.tstd2.soa.rpc.invoke.Invoker;
 
 /**
  * 失效转移：如果调用失败就自动切换到其他节点
@@ -14,7 +14,7 @@ public class FailoverClusterInvoke implements Cluster {
 
         for (int i = 0; i < retriesInt; i++) {
             try {
-                Invoke invoke = invocation.getInvoke();
+                Invoker invoke = invocation.getInvoke();
                 Object result = invoke.invoke(invocation);
                 return result;
             } catch (Exception e) {

@@ -10,7 +10,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
-public abstract class AbstractInvoke implements Invoke {
+public abstract class AbstractInvoker implements Invoker {
 
     @Override
     public Object invoke(Invocation invocation) throws Exception {
