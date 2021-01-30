@@ -30,6 +30,6 @@ public class InvokerChain {
                 }
             };
         }
-        return last;
+        return invoker;
     }
 }
