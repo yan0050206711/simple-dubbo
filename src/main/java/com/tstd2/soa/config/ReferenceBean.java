@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 依赖服务配置
+ */
 public class ReferenceBean extends BaseConfigBean implements ApplicationContextAware, FactoryBean, InitializingBean {
 
     private static final long serialVersionUID = 8473037023470434275L;

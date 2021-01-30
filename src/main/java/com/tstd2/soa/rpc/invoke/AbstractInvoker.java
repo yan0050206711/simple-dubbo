@@ -1,6 +1,7 @@
 package com.tstd2.soa.rpc.invoke;
 
 import com.tstd2.soa.common.LogIds;
+import com.tstd2.soa.common.ProtocolUrl;
 import com.tstd2.soa.config.ReferenceBean;
 import com.tstd2.soa.registry.RegistryNode;
 import com.tstd2.soa.registry.support.RegistryLocalCache;
@@ -58,5 +59,5 @@ public abstract class AbstractInvoker implements Invoker {
         return request;
     }
 
-    abstract Object doInvoke(RegistryNode.ProtocolUrl protocol, Request request, int timeout) throws Exception;
+    abstract Object doInvoke(ProtocolUrl protocolUrl, Request request, int timeout) throws Exception;
 }

@@ -1,26 +1,15 @@
-package com.tstd2.soa.config;
-
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+package com.tstd2.soa.common;
 
 /**
- * 注册协议
+ * 注册协议URL
  */
-public class ProtocolBean extends BaseConfigBean implements ApplicationContextAware {
-
-    private static final long serialVersionUID = 7082032188443659845L;
-
+public class ProtocolUrl {
     private String name;
     private String port;
     private String host;
     private String contextpath;
     private String threads;
     private String serialize;
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
 
     public String getName() {
         return name;
@@ -46,14 +35,6 @@ public class ProtocolBean extends BaseConfigBean implements ApplicationContextAw
         this.host = host;
     }
 
-    public String getThreads() {
-        return threads;
-    }
-
-    public void setThreads(String threads) {
-        this.threads = threads;
-    }
-
     public String getContextpath() {
         return contextpath;
     }
@@ -62,16 +43,19 @@ public class ProtocolBean extends BaseConfigBean implements ApplicationContextAw
         this.contextpath = contextpath;
     }
 
+    public String getThreads() {
+        return threads;
+    }
+
+    public void setThreads(String threads) {
+        this.threads = threads;
+    }
+
     public String getSerialize() {
         return serialize;
     }
 
     public void setSerialize(String serialize) {
         this.serialize = serialize;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SpringContextHolder.setApplicationContext(applicationContext);
     }
 }

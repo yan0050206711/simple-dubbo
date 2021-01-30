@@ -1,5 +1,6 @@
 package com.tstd2.soa.rpc.filter.defaults;
 
+import com.tstd2.soa.common.JsonUtils;
 import com.tstd2.soa.rpc.filter.Filter;
 import com.tstd2.soa.rpc.invoke.Invocation;
 import com.tstd2.soa.rpc.invoke.Invoker;
@@ -17,6 +18,7 @@ public class AccessLogFilter implements Filter {
     @Override
     public Object invoke(Invoker invoker, Invocation invocation) {
 
+        LOGGER.info("request={}", JsonUtils.toJson(invocation.getObjs()));
         try {
             return invoker.invoke(invocation);
         } catch (Exception e) {

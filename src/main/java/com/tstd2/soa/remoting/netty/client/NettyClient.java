@@ -1,6 +1,6 @@
 package com.tstd2.soa.remoting.netty.client;
 
-import com.tstd2.soa.registry.RegistryNode;
+import com.tstd2.soa.common.ProtocolUrl;
 import com.tstd2.soa.remoting.exchange.DefaultFuture;
 import com.tstd2.soa.remoting.exchange.model.Request;
 import com.tstd2.soa.rpc.RpcContext;
@@ -12,7 +12,7 @@ public class NettyClient {
     /**
      * 通过netty发送消息
      */
-    public static Object request(RegistryNode.ProtocolUrl protocol, Request request, int timeout) throws Exception {
+    public static Object request(ProtocolUrl protocolUrl, Request request, int timeout) throws Exception {
 
         boolean isAsync = RpcContext.getContext().isAsync();
 
@@ -20,7 +20,7 @@ public class NettyClient {
         DefaultFuture future = new DefaultFuture(request, isAsync);
 
         try {
-            NettyClientUtil.writeAndFlush(protocol, request);
+            NettyClientUtil.writeAndFlush(protocolUrl, request);
         } catch (Exception e) {
             future.cancel(true);
             future.completeExceptionally(e);

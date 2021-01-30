@@ -1,5 +1,7 @@
 package com.tstd2.soa.registry;
 
+import com.tstd2.soa.common.ProtocolUrl;
+import com.tstd2.soa.common.ServiceUrl;
 import com.tstd2.soa.config.ProtocolBean;
 import com.tstd2.soa.config.RegistryBean;
 import com.tstd2.soa.config.ServiceBean;
@@ -20,9 +22,9 @@ public class BaseRegistryDelegate {
         BaseRegistry registryBean = registry.getRegistryMap().get(protocol);
 
         RegistryNode node = new RegistryNode();
-        RegistryNode.ProtocolUrl protocolUrl = new RegistryNode.ProtocolUrl();
+        ProtocolUrl protocolUrl = new ProtocolUrl();
         BeanUtils.copyProperties(protocolBean, protocolUrl);
-        RegistryNode.ServiceUrl serviceUrl = new RegistryNode.ServiceUrl();
+        ServiceUrl serviceUrl = new ServiceUrl();
         BeanUtils.copyProperties(serviceBean, serviceUrl);
         node.setProtocol(protocolUrl);
         node.setService(serviceUrl);
