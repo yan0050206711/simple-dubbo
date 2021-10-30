@@ -2,6 +2,7 @@ package com.tstd2.soa.rpc.invoke;
 
 import com.tstd2.soa.common.LogIds;
 import com.tstd2.soa.common.ProtocolUrl;
+import com.tstd2.soa.config.ProtocolConfig;
 import com.tstd2.soa.config.ReferenceBean;
 import com.tstd2.soa.registry.RegistryNode;
 import com.tstd2.soa.registry.support.RegistryLocalCache;
@@ -27,7 +28,7 @@ public abstract class AbstractInvoker implements Invoker {
 
         // 负载均衡
         String loadbalance = reference.getLoadbalance();
-        LoadBalance loadBalanceBean = ReferenceBean.getLoadBalances().get(loadbalance);
+        LoadBalance loadBalanceBean = ProtocolConfig.loadBalances.get(loadbalance);
         // 通过负载均衡策略选择一个节点
         RegistryNode registryNode = loadBalanceBean.deSelect(registryInfo);
 

@@ -47,7 +47,7 @@ public class RedisRegistry implements BaseRegistry {
 
     @Override
     public void subscribe(String interfaceName, NotifyListener listener) {
-        this.redisClient.subscribe(new JedisPubSub() {
+        new Thread(() -> redisClient.subscribe(new JedisPubSub() {
             @Override
             public void onMessage(String channel, String message) {
                 listener.notify(getRegistry(interfaceName));
@@ -62,7 +62,7 @@ public class RedisRegistry implements BaseRegistry {
             public void onUnsubscribe(String channel, int subscribedChannels) {
                 listener.notify(getRegistry(interfaceName));
             }
-        });
+        }, channel)).start();
     }
 
     @Override
