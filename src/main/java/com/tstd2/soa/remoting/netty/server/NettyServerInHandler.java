@@ -12,6 +12,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 
 public class NettyServerInHandler extends ChannelInboundHandlerAdapter {
 
+    private ProtocolFilterWrapper protocolFilterWrapper = new ProtocolFilterWrapper();
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
@@ -19,7 +21,7 @@ public class NettyServerInHandler extends ChannelInboundHandlerAdapter {
         Request request = (Request) msg;
         Response response = new Response();
 
-        Invoker invoker = new ProtocolFilterWrapper().export(new Invoker() {
+        Invoker invoker = protocolFilterWrapper.export(new Invoker() {
             @Override
             public Object invoke(Invocation invocation) throws Exception {
 
