@@ -46,4 +46,19 @@ public class ClientTest {
         Thread.sleep(1000);
     }
 
+    @Test
+    public void testHelloAsync2() throws Exception {
+        RpcContext.getContext().useAsync();
+        this.helloService.hello("yancey");
+        RpcContext.getContext().removeAsync();
+
+        System.out.println("other...");
+
+        CompletableFuture<?> future = RpcContext.getContext().getFuture();
+        Object result = future.get();
+        System.out.println(result);
+
+        Thread.sleep(1000);
+    }
+
 }
