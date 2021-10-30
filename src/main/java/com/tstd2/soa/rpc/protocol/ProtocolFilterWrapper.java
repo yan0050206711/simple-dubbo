@@ -13,18 +13,29 @@ import java.util.ServiceLoader;
  */
 public class ProtocolFilterWrapper implements Protocol {
 
+    private InvokerChain invokerChain = null;
+
     @Override
     public <T> Invoker refer(Class<T> interfaceClass, Invoker invoker) {
-        ServiceLoader<Filter> filterLoader = ServiceLoader.load(Filter.class);
-        ServiceLoader<ClientFilter> clientFilterLoader = ServiceLoader.load(ClientFilter.class);
-
-        InvokerChain invokerChain = new InvokerChain();
-        for (Filter filter : filterLoader) {
-            invokerChain.addFilter(filter);
-        }
-        for (Filter filter : clientFilterLoader) {
-            invokerChain.addFilter(filter);
+        if (invokerChain == null) {
+            initInvokerChain();
         }
         return invokerChain.invoke(invoker);
+    }
+
+    private synchronized void initInvokerChain() {
+        if (invokerChain == null) {
+            ServiceLoader<Filter> filterLoader = ServiceLoader.load(Filter.class);
+            ServiceLoader<ClientFilter> clientFilterLoader = ServiceLoader.load(ClientFilter.class);
+
+            InvokerChain invokerChain = new InvokerChain();
+            for (Filter filter : filterLoader) {
+                invokerChain.addFilter(filter);
+            }
+            for (Filter filter : clientFilterLoader) {
+                invokerChain.addFilter(filter);
+            }
+            this.invokerChain = invokerChain;
+        }
     }
 }
