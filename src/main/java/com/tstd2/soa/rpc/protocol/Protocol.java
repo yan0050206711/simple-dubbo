@@ -10,4 +10,6 @@ public interface Protocol {
 
     <T> Invoker refer(Class<T> interfaceClass, Invoker invoker);
 
+    Invoker export(Invoker invoker);
+
 }

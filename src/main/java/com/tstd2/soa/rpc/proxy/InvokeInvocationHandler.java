@@ -3,7 +3,7 @@ package com.tstd2.soa.rpc.proxy;
 import com.tstd2.soa.config.ProtocolConfig;
 import com.tstd2.soa.config.ReferenceBean;
 import com.tstd2.soa.rpc.cluster.Cluster;
-import com.tstd2.soa.rpc.invoke.Invocation;
+import com.tstd2.soa.rpc.invoke.RpcInvocation;
 import com.tstd2.soa.rpc.invoke.Invoker;
 
 import java.lang.reflect.InvocationHandler;
@@ -23,7 +23,7 @@ public class InvokeInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
         // 在这个invoke里面最终要调用多个远程的provider
-        Invocation invocation = new Invocation();
+        RpcInvocation invocation = new RpcInvocation();
         invocation.setMethod(method);
         invocation.setObjs(args);
         invocation.setReference(reference);

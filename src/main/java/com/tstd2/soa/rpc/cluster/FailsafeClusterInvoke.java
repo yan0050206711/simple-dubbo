@@ -1,6 +1,6 @@
 package com.tstd2.soa.rpc.cluster;
 
-import com.tstd2.soa.rpc.invoke.Invocation;
+import com.tstd2.soa.rpc.invoke.RpcInvocation;
 import com.tstd2.soa.rpc.invoke.Invoker;
 
 /**
@@ -8,7 +8,7 @@ import com.tstd2.soa.rpc.invoke.Invoker;
  */
 public class FailsafeClusterInvoke implements Cluster {
     @Override
-    public Object invoke(Invocation invocation) throws Exception {
+    public Object invoke(RpcInvocation invocation) throws Exception {
         Invoker invoke = invocation.getInvoke();
 
             try {

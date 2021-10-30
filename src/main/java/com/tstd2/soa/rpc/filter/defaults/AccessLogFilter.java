@@ -18,8 +18,10 @@ public class AccessLogFilter implements Filter {
     @Override
     public Object invoke(Invoker invoker, Invocation invocation) {
 
-        LOGGER.info("request={}", JsonUtils.toJson(invocation.getObjs()));
         try {
+            if (invocation != null) {
+                LOGGER.info("request={}", JsonUtils.toJson(invocation.getArguments()));
+            }
             return invoker.invoke(invocation);
         } catch (Exception e) {
             e.printStackTrace();

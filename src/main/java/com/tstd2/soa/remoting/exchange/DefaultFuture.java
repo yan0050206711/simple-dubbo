@@ -124,7 +124,7 @@ public class DefaultFuture extends CompletableFuture implements ResponseFuture {
 
     private String getTimeoutMessage(long timeout) {
         StringBuilder builder = new StringBuilder();
-        for (Class<?> type : request.getParametersType()) {
+        for (Class<?> type : request.getParameterTypes()) {
             builder.append(type.getName()).append(",");
         }
         builder.delete(builder.lastIndexOf(","), builder.length());

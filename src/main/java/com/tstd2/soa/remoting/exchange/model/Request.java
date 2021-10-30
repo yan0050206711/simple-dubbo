@@ -1,8 +1,10 @@
 package com.tstd2.soa.remoting.exchange.model;
 
+import com.tstd2.soa.rpc.invoke.Invocation;
+
 import java.io.Serializable;
 
-public class Request implements Serializable {
+public class Request implements Invocation, Serializable {
 
     private static final long serialVersionUID = 3117006402387814342L;
 
@@ -21,11 +23,11 @@ public class Request implements Serializable {
     /**
      * 参数类型
      */
-    private Class<?>[] parametersType;
+    private Class<?>[] parameterTypes;
     /**
      * 参数值
      */
-    private Object[] parametersValue;
+    private Object[] arguments;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -39,6 +41,7 @@ public class Request implements Serializable {
         this.sessionId = sessionId;
     }
 
+    @Override
     public String getClassName() {
         return className;
     }
@@ -47,6 +50,7 @@ public class Request implements Serializable {
         this.className = className;
     }
 
+    @Override
     public String getMethodName() {
         return methodName;
     }
@@ -55,20 +59,21 @@ public class Request implements Serializable {
         this.methodName = methodName;
     }
 
-    public Class<?>[] getParametersType() {
-        return parametersType;
+    @Override
+    public Class<?>[] getParameterTypes() {
+        return parameterTypes;
     }
 
-    public void setParametersType(Class<?>[] parametersType) {
-        this.parametersType = parametersType;
+    public void setParameterTypes(Class<?>[] parameterTypes) {
+        this.parameterTypes = parameterTypes;
     }
 
-    public Object[] getParametersValue() {
-        return parametersValue;
+    @Override
+    public Object[] getArguments() {
+        return arguments;
     }
 
-    public void setParametersValue(Object[] parametersValue) {
-        this.parametersValue = parametersValue;
+    public void setArguments(Object[] arguments) {
+        this.arguments = arguments;
     }
-
 }

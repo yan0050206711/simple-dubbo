@@ -42,8 +42,8 @@ public class ResponseClientUtil {
 //        MethodAccess methodAccess = MethodAccess.get(serviceBean.getClass());
 //        int methodIndex = methodAccess.getIndex(request.getMethodName(), request.getParametersType());
         MethodAccess methodAccess = ReflectionCache.putAndGetMethodAccess(serviceBean.getClass());
-        int methodIndex = ReflectionCache.putAndGetMethodIndex(serviceBean.getClass(), request.getMethodName(), request.getParametersType(), methodAccess);
-        Object result = methodAccess.invoke(serviceBean, methodIndex, request.getParametersValue());
+        int methodIndex = ReflectionCache.putAndGetMethodIndex(serviceBean.getClass(), request.getMethodName(), request.getParameterTypes(), methodAccess);
+        Object result = methodAccess.invoke(serviceBean, methodIndex, request.getArguments());
 
         return result;
     }

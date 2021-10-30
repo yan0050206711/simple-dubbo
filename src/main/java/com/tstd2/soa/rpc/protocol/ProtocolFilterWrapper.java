@@ -1,6 +1,5 @@
 package com.tstd2.soa.rpc.protocol;
 
-import com.tstd2.soa.rpc.filter.ClientFilter;
 import com.tstd2.soa.rpc.filter.Filter;
 import com.tstd2.soa.rpc.filter.InvokerChain;
 import com.tstd2.soa.rpc.invoke.Invoker;
@@ -23,16 +22,20 @@ public class ProtocolFilterWrapper implements Protocol {
         return invokerChain.invoke(invoker);
     }
 
-    private synchronized void initInvokerChain() {
+    @Override
+    public Invoker export(Invoker invoker) {
+        if (invokerChain == null) {
+            initInvokerChain();
+        }
+        return invokerChain.invoke(invoker);
+    }
+
+    public synchronized void initInvokerChain() {
         if (invokerChain == null) {
             ServiceLoader<Filter> filterLoader = ServiceLoader.load(Filter.class);
-            ServiceLoader<ClientFilter> clientFilterLoader = ServiceLoader.load(ClientFilter.class);
 
             InvokerChain invokerChain = new InvokerChain();
             for (Filter filter : filterLoader) {
-                invokerChain.addFilter(filter);
-            }
-            for (Filter filter : clientFilterLoader) {
                 invokerChain.addFilter(filter);
             }
             this.invokerChain = invokerChain;
